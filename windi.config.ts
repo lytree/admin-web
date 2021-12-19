@@ -1,5 +1,13 @@
-module.exports = {
-  content: ['./public/**/*.html', './src/**/*.{js,jsx,ts,tsx,vue}'],
+
+import { defineConfig } from 'vite-plugin-windicss'
+
+export default defineConfig({
+  preflight: false,
+  extract: {
+    include: ['src/**/*.{vue,html,jsx,tsx}'],
+    exclude: ['node_modules', '.git'],
+  },
+  attributify: true,
   darkMode: 'class',
   theme: {
     extend: {
@@ -40,4 +48,4 @@ module.exports = {
     ]
   },
   plugins: [require('@tailwindcss/typography')]
-}
+})

@@ -3,12 +3,6 @@ import App from './App.vue';
 import AppProvider from './AppProvider.vue';
 import { setupStore } from './store';
 import { setupRouter } from './routers';
-// import { setupAssets } from './plugins';
-// import { setupDirectives } from './directives';
-
-// import 'swiper/css';
-// import 'swiper/css/navigation';
-// import 'swiper/css/pagination';
 import "./main.css"
 async function setupApp() {
     const appProvider = createApp(AppProvider);

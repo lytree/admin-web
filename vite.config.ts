@@ -6,7 +6,7 @@ import Components from 'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
 import Vue from '@vitejs/plugin-vue'
 import dotenv from 'dotenv';
-
+import WindiCSS from 'vite-plugin-windicss'
 
 
 
@@ -21,6 +21,7 @@ export default ({ command, mode }: ConfigEnv): UserConfigExport => {
       }
     },
     plugins: [
+      WindiCSS(),
       Vue({
         include: [/\.vue$/, /\.md$/]
       }),
