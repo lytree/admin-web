@@ -1,7 +1,36 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig, loadEnv } from 'vite';
+import path from 'path';
+import { plugins } from './build';
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [vue()]
-})
+export default defineConfig(({ mode }) => {
+  const viteEnv = loadEnv(mode, `.env.${mode}`);
+
+  return {
+    base: viteEnv.VITE_BASE_URL,
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src')
+      }
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: `@use "./src/styles/scss/global.scss" as *;`
+        }
+      }
+    },
+    plugins,
+    server: {
+      fs: {
+        strict: false
+      },
+      host: '0.0.0.0',
+      port: 3100,
+      open: true
+    },
+    build: {
+      brotliSize: false,
+      sourcemap: false
+    }
+  };
+});
