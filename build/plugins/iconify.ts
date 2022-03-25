@@ -9,7 +9,7 @@ export default [
 
     // allow auto import and register components used in markdown
     include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
-    resolvers: [IconsResolver({ componentPrefix: 'icon' })]
+    resolvers: [IconsResolver({ componentPrefix: 'i' })]
   }),
   Icons({ scale: 1, defaultClass: 'inline-block', compiler: 'vue3' })
 ];

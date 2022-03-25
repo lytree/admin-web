@@ -2,8 +2,14 @@
   "compilerOptions": {
     "composite": true,
     "module": "esnext",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "types": ["vite/client", "@types/node", "unplugin-icons/types/vue"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
+
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "./**/*.ts", "mock/**/*.ts"],
   "exclude": ["/dist/**", "node_modules"]
 }

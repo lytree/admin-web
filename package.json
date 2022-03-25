@@ -3,21 +3,22 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-        "dev": "vite",
-        "dev:prod": "vite --mode production",
-        "dev:staging": "vite --mode staging",
-        "vtsc": "vue-tsc --noEmit --skipLibCheck",
-        "build": "npm run vtsc && vite build",
-        "build:dev": "npm run vtsc && vite build --mode development",
-        "build:staging": "npm run vtsc && vite build --mode staging",
-        "serve": "vite preview",
-        "lint": "eslint ./src --ext .vue,.js,jsx,.ts,tsx",
-        "lint:fix": "eslint --fix ./src --ext .vue,.js,jsx,.ts,tsx"
+    "dev": "vite",
+    "dev:prod": "vite --mode production",
+    "dev:staging": "vite --mode staging",
+    "vtsc": "vue-tsc --noEmit --skipLibCheck",
+    "build": "npm run vtsc && vite build",
+    "build:dev": "npm run vtsc && vite build --mode development",
+    "build:staging": "npm run vtsc && vite build --mode staging",
+    "serve": "vite preview",
+    "lint": "eslint ./src --ext .vue,.js,jsx,.ts,tsx",
+    "lint:fix": "eslint --fix ./src --ext .vue,.js,jsx,.ts,tsx"
   },
   "dependencies": {
     "@vueuse/core": "^8.1.2",
-    "vue": "^3.2.31",
+    "naive-ui": "^2.26.4",
     "pinia": "^2.0.12",
+    "vue": "^3.2.31",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
