@@ -4,9 +4,7 @@ import '@/styles/layout/footer.css';
 import { defineComponent, h, ref, Component } from 'vue';
 import { NIcon, NMenu } from 'naive-ui';
 import type { MenuOption } from 'naive-ui';
-// import { IconAccountBox as BookIcon, PersonOutline as PersonIcon, WineOutline as WineIcon } from '@vicons/ionicons5';
 import IconAccountBox from '~icons/mdi/account-box';
-import RouterView from '@/views/RouterView.vue';
 
 function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
@@ -97,7 +95,7 @@ const menuOptions: MenuOption[] = [
 ];
 
 export default defineComponent({
-  components: { NMenu, RouterView },
+  components: { NMenu },
   setup() {
     return {
       activeKey: ref<string | null>(null),
