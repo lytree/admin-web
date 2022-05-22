@@ -1,8 +1,8 @@
-import { createHtmlPlugin } from 'vite-plugin-html'; // html插件(使用变量、压缩)
-import viteEnv from '../env';
+import type { PluginOption } from 'vite';
+import { createHtmlPlugin } from 'vite-plugin-html';
 
-export default [
-  createHtmlPlugin({
+export default (viteEnv: ImportMetaEnv): PluginOption[] => {
+  return createHtmlPlugin({
     minify: true,
     inject: {
       data: {
@@ -10,5 +10,5 @@ export default [
         appTitle: viteEnv.VITE_APP_TITLE
       }
     }
-  })
-];
+  });
+};

@@ -1,4 +1,2 @@
-import viteEnv from './env';
-import plugins from './plugins';
-
-export { viteEnv, plugins };
+export * from './plugins';
+export * from './config';

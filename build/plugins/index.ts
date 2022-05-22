@@ -1,11 +1,26 @@
+import type { PluginOption } from 'vite';
 import vue from './vue';
 import html from './html';
-import iconify from './iconify';
-import windicss from './windicss';
-import visualizer from './visualizer';
+import unplugin from './unplugin';
+import unocss from './unocss';
 import mock from './mock';
-import autoImport from './autoImport';
+import visualizer from './visualizer';
+import compress from './compress';
 
-const plugins = [vue, ...html, ...iconify, autoImport, windicss, visualizer, mock];
+/**
+ * vite插件
+ * @param viteEnv - 环境变量配置
+ * @param srcPath - src路径
+ */
+export function setupVitePlugins(viteEnv: ImportMetaEnv, srcPath: string): (PluginOption | PluginOption[])[] {
+  const plugins = [...vue, html(viteEnv), ...unplugin(srcPath), unocss, mock];
 
-export default plugins;
+  if (viteEnv.VITE_VISUALIZER === 'true') {
+    plugins.push(visualizer);
+  }
+  if (viteEnv.VITE_COMPRESS === 'true') {
+    plugins.push(compress(viteEnv));
+  }
+
+  return plugins;
+}

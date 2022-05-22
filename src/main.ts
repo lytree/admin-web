@@ -1,33 +1,27 @@
 import { createApp } from 'vue';
-import App from './App.vue';
-import { setupRouter } from './routers';
 import { setupAssets } from './plugins';
-
-function setupPlugins() {
-  /** 引入静态资源 */
-  setupAssets();
-}
+import { setupStore } from './store';
+import { setupDirectives } from './directives';
+import { setupRouter } from './router';
+import App from './App.vue';
 
 async function setupApp() {
-  //   const appProvider = createApp(AppProvider);
+  // import assets: js、css
+  setupAssets();
+
   const app = createApp(App);
 
-  //   // 挂载全局状态
-  //   setupStore(app);
+  // store plugin: pinia
+  setupStore(app);
 
-  // 优先挂载一下 appProvider 解决路由守卫，Axios中可使用，LoadingBar，Dialog，Message 等之类组件
-  //   appProvider.mount('#appProvider');
+  // vue custom directives
+  setupDirectives(app);
 
-  //   // 挂载自定义vue指令
-  //   setupDirectives(app);
-
-  // 挂载路由
+  // vue router
   await setupRouter(app);
 
-  // 路由准备就绪后挂载APP实例
+  // mount app
   app.mount('#app');
 }
-
-setupPlugins();
 
 setupApp();
