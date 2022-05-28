@@ -1,4 +1,3 @@
-import DefineOptions from 'unplugin-vue-define-options/vite';
 import Icons from 'unplugin-icons/vite';
 import IconsResolver from 'unplugin-icons/resolver';
 import Components from 'unplugin-vue-components/vite';
@@ -7,7 +6,6 @@ import { FileSystemIconLoader } from 'unplugin-icons/loaders';
 
 export default (srcPath: string) => {
   return [
-    DefineOptions(),
     Icons({
       compiler: 'vue3',
       customCollections: {
