@@ -1,5 +1,5 @@
 <template>
-  <footer class="z-[999] box-border w-full left-0 bottom-0 duration-300 ease-in-out flex-shrink" :style="style">
+  <footer class="z-[999] box-border w-full left-0 bottom-0 duration-300 ease-in-out flex-shrink-0" :style="style">
     <slot></slot>
   </footer>
 </template>
