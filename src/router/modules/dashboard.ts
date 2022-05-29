@@ -9,7 +9,7 @@ const dashboard: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '分析页',
-        requiresAuth: true,
+
         icon: 'icon-park-outline:analysis'
       }
     },
@@ -19,7 +19,7 @@ const dashboard: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '工作台',
-        requiresAuth: true,
+
         permissions: ['super', 'admin'],
         icon: 'icon-park-outline:workbench'
       }

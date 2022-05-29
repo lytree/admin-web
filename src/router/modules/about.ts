@@ -4,9 +4,8 @@ const about: AuthRoute.Route = {
   component: 'self',
   meta: {
     title: '关于',
-    requiresAuth: true,
+
     singleLayout: 'basic',
-    permissions: ['super', 'admin', 'user'],
     icon: 'fluent:book-information-24-regular',
     order: 8
   }

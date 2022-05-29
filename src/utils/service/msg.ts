@@ -4,7 +4,7 @@ import { NO_ERROR_MSG_CODE, ERROR_MSG_DURATION } from '@/config';
 const errorMsgStack = new Map<string | number, string>([]);
 
 function addErrorMsg(error: Service.RequestError) {
-  errorMsgStack.set(error.code, error.msg);
+  errorMsgStack.set(error.code, error.message);
 }
 function removeErrorMsg(error: Service.RequestError) {
   errorMsgStack.delete(error.code);
@@ -18,12 +18,12 @@ function hasErrorMsg(error: Service.RequestError) {
  * @param error
  */
 export function showErrorMsg(error: Service.RequestError) {
-  if (!error.msg) return;
+  if (!error.message) return;
   if (!NO_ERROR_MSG_CODE.includes(error.code)) {
     if (!hasErrorMsg(error)) {
       addErrorMsg(error);
-      window.console.warn(error.code, error.msg);
-      window.$message?.error(error.msg, { duration: ERROR_MSG_DURATION });
+      window.console.warn(error.code, error.message);
+      window.$message?.error(error.message, { duration: ERROR_MSG_DURATION });
       setTimeout(() => {
         removeErrorMsg(error);
       }, ERROR_MSG_DURATION);

@@ -15,13 +15,13 @@ type ErrorStatus = keyof typeof ERROR_STATUS;
 
 /**
  * 处理axios请求失败的错误
- * @param error - 错误
+ * @param axiosError - 错误
  */
 export function handleAxiosError(axiosError: AxiosError) {
   const error: Service.RequestError = {
     type: 'axios',
     code: DEFAULT_REQUEST_ERROR_CODE,
-    msg: DEFAULT_REQUEST_ERROR_MSG
+    message: DEFAULT_REQUEST_ERROR_MSG
   };
 
   const actions: Common.StrategyAction[] = [
@@ -65,7 +65,7 @@ export function handleResponseError(response: AxiosResponse) {
   const error: Service.RequestError = {
     type: 'axios',
     code: DEFAULT_REQUEST_ERROR_CODE,
-    msg: DEFAULT_REQUEST_ERROR_MSG
+    message: DEFAULT_REQUEST_ERROR_MSG
   };
 
   if (!window.navigator.onLine) {
@@ -88,11 +88,11 @@ export function handleResponseError(response: AxiosResponse) {
  * @param backendResult - 后端接口的响应数据
  */
 export function handleBackendError(backendResult: Record<string, any>, config: Service.BackendResultConfig) {
-  const { codeKey, msgKey } = config;
+  const { code, message } = config;
   const error: Service.RequestError = {
     type: 'backend',
-    code: backendResult[codeKey],
-    msg: backendResult[msgKey]
+    code: backendResult[code],
+    message: backendResult[message]
   };
 
   showErrorMsg(error);

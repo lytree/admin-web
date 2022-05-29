@@ -9,7 +9,7 @@ const component: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '按钮',
-        requiresAuth: true,
+
         icon: 'ic:baseline-radio-button-checked'
       }
     },
@@ -19,7 +19,7 @@ const component: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '卡片',
-        requiresAuth: true,
+
         icon: 'mdi:card-outline'
       }
     },
@@ -29,7 +29,7 @@ const component: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '表格',
-        requiresAuth: true,
+
         icon: 'mdi:table-large'
       }
     }

@@ -40,7 +40,6 @@ export function createRequest(axiosConfig: AxiosRequestConfig, backendConfig?: S
       param.data,
       param.axiosConfig
     )) as Service.RequestResult<T>;
-
     return res;
   }
 
@@ -80,11 +79,21 @@ export function createRequest(axiosConfig: AxiosRequestConfig, backendConfig?: S
   function handleDelete<T>(url: string, config: AxiosRequestConfig) {
     return asyncRequest<T>({ url, method: 'delete', axiosConfig: config });
   }
-
+  /**
+   * form请求
+   * @param url - 请求地址
+   * @param data - 表单数据
+   * @param config - axios配置
+   */
+  function form<T>(url: string, data?: FormData, customConfig?: AxiosRequestConfig) {
+    const config = { headers: { 'content-type': 'application/x-www-form-urlencoded' }, ...customConfig };
+    return asyncRequest<T>({ url, method: 'post', data, axiosConfig: config });
+  }
   return {
     get,
     post,
     put,
+    form,
     delete: handleDelete
   };
 }

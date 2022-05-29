@@ -9,7 +9,7 @@ const document: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: 'vue文档',
-        requiresAuth: true,
+
         icon: 'mdi:vuejs'
       }
     },
@@ -19,7 +19,7 @@ const document: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: 'vue文档(新版)',
-        requiresAuth: true,
+
         icon: 'mdi:vuejs'
       }
     },
@@ -29,7 +29,7 @@ const document: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: 'vite文档',
-        requiresAuth: true,
+
         icon: 'simple-icons:vite'
       }
     },
@@ -38,7 +38,7 @@ const document: AuthRoute.Route = {
       path: '/document/project',
       meta: {
         title: '项目文档(外链)',
-        requiresAuth: true,
+
         icon: 'mdi:file-link-outline',
         href: 'https://docs.soybean.pro/'
       }

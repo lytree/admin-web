@@ -3,12 +3,14 @@
 /** 后端返回的用户权益相关类型 */
 declare namespace ApiAuth {
   /** 返回的token和刷新token */
-  interface Token {
+  interface UserInfo {
+    id: string;
+    username: string;
+    userPhone?: string;
+    userEmail?: string;
+    isRememberLogin?: boolean;
     token: string;
-    refreshToken: string;
   }
-  /** 返回的用户信息 */
-  type UserInfo = Auth.UserInfo;
 }
 
 /** 后端返回的路由相关类型 */

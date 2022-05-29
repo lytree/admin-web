@@ -1,4 +1,4 @@
-export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
+export const routeModel: Record<string, AuthRoute.Route[]> = {
   super: [
     {
       name: 'dashboard',
@@ -11,7 +11,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '分析页',
-            requiresAuth: true,
+
             icon: 'icon-park-outline:analysis'
           }
         },
@@ -21,7 +21,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '工作台',
-            requiresAuth: true,
+
             icon: 'icon-park-outline:workbench'
           }
         }
@@ -43,7 +43,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: 'vue文档',
-            requiresAuth: true,
+
             icon: 'mdi:vuejs'
           }
         },
@@ -53,7 +53,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: 'vue文档(新版)',
-            requiresAuth: true,
+
             icon: 'mdi:vuejs'
           }
         },
@@ -63,7 +63,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: 'vite文档',
-            requiresAuth: true,
+
             icon: 'simple-icons:vite'
           }
         },
@@ -72,7 +72,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           path: '/document/project',
           meta: {
             title: '项目文档(外链)',
-            requiresAuth: true,
+
             icon: 'mdi:file-link-outline',
             href: 'https://docs.soybean.pro/'
           }
@@ -95,7 +95,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '按钮',
-            requiresAuth: true,
+
             icon: 'ic:baseline-radio-button-checked'
           }
         },
@@ -105,7 +105,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '卡片',
-            requiresAuth: true,
+
             icon: 'mdi:card-outline'
           }
         },
@@ -115,7 +115,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '表格',
-            requiresAuth: true,
+
             icon: 'mdi:table-large'
           }
         }
@@ -137,7 +137,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '地图',
-            requiresAuth: true,
+
             icon: 'mdi:map'
           }
         },
@@ -147,7 +147,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '视频',
-            requiresAuth: true,
+
             icon: 'mdi:video'
           }
         },
@@ -162,7 +162,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
               component: 'self',
               meta: {
                 title: '富文本编辑器',
-                requiresAuth: true,
+
                 icon: 'mdi:file-document-edit-outline'
               }
             },
@@ -172,7 +172,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
               component: 'self',
               meta: {
                 title: 'markdown编辑器',
-                requiresAuth: true,
+
                 icon: 'ri:markdown-line'
               }
             }
@@ -188,7 +188,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: 'Swiper插件',
-            requiresAuth: true,
+
             icon: 'simple-icons:swiper'
           }
         },
@@ -198,7 +198,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '剪贴板',
-            requiresAuth: true,
+
             icon: 'mdi:clipboard-outline'
           }
         },
@@ -208,7 +208,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '图标',
-            requiresAuth: true,
+
             icon: 'ic:baseline-insert-emoticon'
           }
         },
@@ -218,7 +218,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '打印',
-            requiresAuth: true,
+
             icon: 'ic:baseline-local-printshop'
           }
         }
@@ -227,38 +227,6 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
         title: '插件示例',
         icon: 'clarity:plugin-line',
         order: 4
-      }
-    },
-    {
-      name: 'auth-demo',
-      path: '/auth-demo',
-      component: 'basic',
-      children: [
-        {
-          name: 'auth-demo_permission',
-          path: '/auth-demo/permission',
-          component: 'self',
-          meta: {
-            title: '权限切换',
-            requiresAuth: true,
-            icon: 'ic:round-construction'
-          }
-        },
-        {
-          name: 'auth-demo_super',
-          path: '/auth-demo/super',
-          component: 'self',
-          meta: {
-            title: '超级管理员可见',
-            requiresAuth: true,
-            icon: 'ic:round-supervisor-account'
-          }
-        }
-      ],
-      meta: {
-        title: '权限示例',
-        icon: 'ic:baseline-security',
-        order: 5
       }
     },
     {
@@ -272,7 +240,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '异常页403',
-            requiresAuth: true,
+
             icon: 'ic:baseline-block'
           }
         },
@@ -282,7 +250,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '异常页404',
-            requiresAuth: true,
+
             icon: 'ic:baseline-web-asset-off'
           }
         },
@@ -292,7 +260,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '异常页500',
-            requiresAuth: true,
+
             icon: 'ic:baseline-wifi-off'
           }
         }
@@ -319,7 +287,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
               component: 'self',
               meta: {
                 title: '二级菜单',
-                requiresAuth: true,
+
                 icon: 'ic:outline-menu'
               }
             },
@@ -334,7 +302,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
                   component: 'self',
                   meta: {
                     title: '三级菜单',
-                    requiresAuth: true,
+
                     icon: 'ic:outline-menu'
                   }
                 }
@@ -363,7 +331,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
       component: 'self',
       meta: {
         title: '关于',
-        requiresAuth: true,
+
         singleLayout: 'basic',
         icon: 'fluent:book-information-24-regular',
         order: 8
@@ -382,7 +350,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '分析页',
-            requiresAuth: true,
+
             icon: 'icon-park-outline:analysis'
           }
         },
@@ -392,7 +360,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '工作台',
-            requiresAuth: true,
+
             icon: 'icon-park-outline:workbench'
           }
         }
@@ -414,7 +382,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: 'vue文档',
-            requiresAuth: true,
+
             icon: 'mdi:vuejs'
           }
         },
@@ -424,7 +392,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: 'vue文档(新版)',
-            requiresAuth: true,
+
             icon: 'mdi:vuejs'
           }
         },
@@ -434,7 +402,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: 'vite文档',
-            requiresAuth: true,
+
             icon: 'simple-icons:vite'
           }
         },
@@ -443,7 +411,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           path: '/document/project',
           meta: {
             title: '项目文档(外链)',
-            requiresAuth: true,
+
             icon: 'mdi:file-link-outline',
             href: 'https://docs.soybean.pro/'
           }
@@ -466,7 +434,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '按钮',
-            requiresAuth: true,
+
             icon: 'ic:baseline-radio-button-checked'
           }
         },
@@ -476,7 +444,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '卡片',
-            requiresAuth: true,
+
             icon: 'mdi:card-outline'
           }
         },
@@ -486,7 +454,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '表格',
-            requiresAuth: true,
+
             icon: 'mdi:table-large'
           }
         }
@@ -508,7 +476,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '地图',
-            requiresAuth: true,
+
             icon: 'mdi:map'
           }
         },
@@ -518,7 +486,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '视频',
-            requiresAuth: true,
+
             icon: 'mdi:video'
           }
         },
@@ -533,7 +501,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
               component: 'self',
               meta: {
                 title: '富文本编辑器',
-                requiresAuth: true,
+
                 icon: 'mdi:file-document-edit-outline'
               }
             },
@@ -543,7 +511,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
               component: 'self',
               meta: {
                 title: 'markdown编辑器',
-                requiresAuth: true,
+
                 icon: 'ri:markdown-line'
               }
             }
@@ -559,7 +527,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: 'Swiper插件',
-            requiresAuth: true,
+
             icon: 'simple-icons:swiper'
           }
         },
@@ -569,7 +537,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '剪贴板',
-            requiresAuth: true,
+
             icon: 'mdi:clipboard-outline'
           }
         },
@@ -579,7 +547,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '图标',
-            requiresAuth: true,
+
             icon: 'ic:baseline-insert-emoticon'
           }
         },
@@ -589,7 +557,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '打印',
-            requiresAuth: true,
+
             icon: 'ic:baseline-local-printshop'
           }
         }
@@ -611,7 +579,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '权限切换',
-            requiresAuth: true,
+
             icon: 'ic:round-construction'
           }
         }
@@ -633,7 +601,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '异常页403',
-            requiresAuth: true,
+
             icon: 'ic:baseline-block'
           }
         },
@@ -643,7 +611,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '异常页404',
-            requiresAuth: true,
+
             icon: 'ic:baseline-web-asset-off'
           }
         },
@@ -653,7 +621,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '异常页500',
-            requiresAuth: true,
+
             icon: 'ic:baseline-wifi-off'
           }
         }
@@ -680,7 +648,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
               component: 'self',
               meta: {
                 title: '二级菜单',
-                requiresAuth: true,
+
                 icon: 'ic:outline-menu'
               }
             },
@@ -695,7 +663,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
                   component: 'self',
                   meta: {
                     title: '三级菜单',
-                    requiresAuth: true,
+
                     icon: 'ic:outline-menu'
                   }
                 }
@@ -724,7 +692,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
       component: 'self',
       meta: {
         title: '关于',
-        requiresAuth: true,
+
         singleLayout: 'basic',
         icon: 'fluent:book-information-24-regular',
         order: 8
@@ -743,7 +711,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '分析页',
-            requiresAuth: true,
+
             icon: 'icon-park-outline:analysis'
           }
         }
@@ -765,7 +733,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
           component: 'self',
           meta: {
             title: '权限切换',
-            requiresAuth: true,
+
             icon: 'ic:round-construction'
           }
         }
@@ -792,7 +760,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
               component: 'self',
               meta: {
                 title: '二级菜单',
-                requiresAuth: true,
+
                 icon: 'ic:outline-menu'
               }
             },
@@ -807,7 +775,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
                   component: 'self',
                   meta: {
                     title: '三级菜单',
-                    requiresAuth: true,
+
                     icon: 'ic:outline-menu'
                   }
                 }
@@ -836,7 +804,7 @@ export const routeModel: Record<Auth.RoleType, AuthRoute.Route[]> = {
       component: 'self',
       meta: {
         title: '关于',
-        requiresAuth: true,
+
         singleLayout: 'basic',
         icon: 'fluent:book-information-24-regular',
         order: 8

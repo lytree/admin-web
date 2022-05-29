@@ -9,7 +9,7 @@ const plugin: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '地图',
-        requiresAuth: true,
+
         icon: 'mdi:map'
       }
     },
@@ -19,7 +19,7 @@ const plugin: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '视频',
-        requiresAuth: true,
+
         icon: 'mdi:video'
       }
     },
@@ -34,7 +34,7 @@ const plugin: AuthRoute.Route = {
           component: 'self',
           meta: {
             title: '富文本编辑器',
-            requiresAuth: true,
+
             icon: 'mdi:file-document-edit-outline'
           }
         },
@@ -44,7 +44,7 @@ const plugin: AuthRoute.Route = {
           component: 'self',
           meta: {
             title: 'markdown编辑器',
-            requiresAuth: true,
+
             icon: 'ri:markdown-line'
           }
         }
@@ -60,7 +60,7 @@ const plugin: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: 'Swiper插件',
-        requiresAuth: true,
+
         icon: 'simple-icons:swiper'
       }
     },
@@ -70,7 +70,7 @@ const plugin: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '剪贴板',
-        requiresAuth: true,
+
         icon: 'mdi:clipboard-outline'
       }
     },
@@ -80,7 +80,7 @@ const plugin: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '图标',
-        requiresAuth: true,
+
         icon: 'ic:baseline-insert-emoticon'
       }
     },
@@ -90,7 +90,7 @@ const plugin: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '打印',
-        requiresAuth: true,
+
         icon: 'ic:baseline-local-printshop'
       }
     }

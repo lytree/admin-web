@@ -41,19 +41,19 @@ declare namespace Service {
     /** 错误码 */
     code: string | number;
     /** 错误信息 */
-    msg: string;
+    message: string;
   }
 
   /** 后端接口返回的数据结构配置 */
   interface BackendResultConfig {
     /** 表示后端请求状态码的属性字段 */
-    codeKey: string;
+    code: string;
     /** 表示后端请求数据的属性字段 */
-    dataKey: string;
+    data: string;
     /** 表示后端消息的属性字段 */
-    msgKey: string;
+    message: string;
     /** 后端业务上定义的成功请求的状态 */
-    successCode: number | string;
+    // successCode: number | string;
   }
 
   /** 自定义的请求成功结果 */

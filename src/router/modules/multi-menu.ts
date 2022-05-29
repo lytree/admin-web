@@ -14,7 +14,7 @@ const multiMenu: AuthRoute.Route = {
           component: 'self',
           meta: {
             title: '二级菜单',
-            requiresAuth: true,
+
             icon: 'ic:outline-menu'
           }
         },
@@ -29,7 +29,7 @@ const multiMenu: AuthRoute.Route = {
               component: 'self',
               meta: {
                 title: '三级菜单',
-                requiresAuth: true,
+
                 icon: 'ic:outline-menu'
               }
             }

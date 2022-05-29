@@ -33,17 +33,17 @@ export function removeRefreshToken() {
 
 /** 获取用户信息 */
 export function getUserInfo() {
-  const emptyInfo: Auth.UserInfo = {
-    userId: '',
-    userName: '',
-    userRole: 'user'
+  const emptyInfo: ApiAuth.UserInfo = {
+    id: '',
+    username: '',
+    token: ''
   };
-  const userInfo: Auth.UserInfo = getLocal<Auth.UserInfo>(EnumStorageKey['user-info']) || emptyInfo;
+  const userInfo: ApiAuth.UserInfo = getLocal<ApiAuth.UserInfo>(EnumStorageKey['user-info']) || emptyInfo;
   return userInfo;
 }
 
 /** 设置用户信息 */
-export function setUserInfo(userInfo: Auth.UserInfo) {
+export function setUserInfo(userInfo: ApiAuth.UserInfo) {
   setLocal(EnumStorageKey['user-info'], userInfo);
 }
 

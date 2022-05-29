@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { router, constantRoutes, routes as staticRoutes } from '@/router';
+import { router, constantRoutes } from '@/router';
 import { fetchUserRoutes } from '@/service';
 import {
   getUserInfo,
@@ -7,20 +7,12 @@ import {
   transformAuthRoutesToVueRoutes,
   transformAuthRoutesToSearchMenus,
   getCacheRoutes,
-  filterAuthRoutesByUserPermission,
   transformRoutePathToRouteName,
   getConstantRouteNames
 } from '@/utils';
-import { useAuthStore } from '../auth';
 import { useTabStore } from '../tab';
 
 interface RouteState {
-  /**
-   * 权限路由模式:
-   * - static - 前端声明的静态
-   * - dynamic - 后端返回的动态
-   */
-  authRouteMode: ImportMetaEnv['VITE_AUTH_ROUTE_MODE'];
   /** 是否初始化了权限路由 */
   isInitAuthRoute: boolean;
   /** 路由首页name(前端静态路由时生效，后端动态路由该值会被后端返回的值覆盖) */
@@ -35,7 +27,6 @@ interface RouteState {
 
 export const useRouteStore = defineStore('route-store', {
   state: (): RouteState => ({
-    authRouteMode: import.meta.env.VITE_AUTH_ROUTE_MODE,
     isInitAuthRoute: false,
     routeHomeName: transformRoutePathToRouteName(import.meta.env.VITE_ROUTE_HOME_PATH),
     menus: [],
@@ -77,32 +68,19 @@ export const useRouteStore = defineStore('route-store', {
     },
     /** 初始化动态路由 */
     async initDynamicRoute() {
-      const { userId } = getUserInfo();
-      const { data } = await fetchUserRoutes(userId);
+      const { data } = await fetchUserRoutes();
       if (data) {
         this.routeHomeName = data.home;
         this.handleAuthRoutes(data.routes);
       }
     },
-    /** 初始化静态路由 */
-    async initStaticRoute() {
-      const auth = useAuthStore();
-      const routes = filterAuthRoutesByUserPermission(staticRoutes, auth.userInfo.userRole);
-      this.handleAuthRoutes(routes);
-    },
     /** 初始化权限路由 */
     async initAuthRoute() {
       const { initHomeTab } = useTabStore();
-      const { userId } = getUserInfo();
+      const { id } = getUserInfo();
 
-      if (!userId) return;
-
-      const isDynamicRoute = this.authRouteMode === 'dynamic';
-      if (isDynamicRoute) {
-        await this.initDynamicRoute();
-      } else {
-        await this.initStaticRoute();
-      }
+      if (!id) return;
+      await this.initDynamicRoute();
 
       initHomeTab(this.routeHomeName, router);
 
