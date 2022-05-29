@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
-import { router, constantRoutes } from '@/router';
-import { fetchUserRoutes } from '@/service';
+import { router, constantRoutes, routes as staticRoutes } from '@/router';
 import {
   getUserInfo,
   transformAuthRouteToMenu,
@@ -68,11 +67,7 @@ export const useRouteStore = defineStore('route-store', {
     },
     /** 初始化动态路由 */
     async initDynamicRoute() {
-      const { data } = await fetchUserRoutes();
-      if (data) {
-        this.routeHomeName = data.home;
-        this.handleAuthRoutes(data.routes);
-      }
+      this.handleAuthRoutes(staticRoutes);
     },
     /** 初始化权限路由 */
     async initAuthRoute() {
