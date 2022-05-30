@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { AxiosRequestConfig, AxiosInstance, AxiosError } from 'axios';
+import { useAuthStore } from '@/store';
 import {
   getToken,
   transformRequestData,
@@ -64,6 +65,11 @@ export default class CustomAxiosInstance {
           // 请求成功
           if (backend[code] === 'S0000') {
             return handleServiceResult(null, backend[data]);
+          }
+          if (backend[code] === 'A1009') {
+            const { resetAuthStore } = useAuthStore();
+            resetAuthStore();
+            return null;
           }
           const error = handleBackendError(backend, this.backendConfig);
           return handleServiceResult(error, null);

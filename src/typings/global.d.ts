@@ -16,3 +16,10 @@ declare namespace Common {
 
 /** 构建时间 */
 declare const PROJECT_BUILD_TIME: string;
+
+declare module '*.vue' {
+  import { ComponentOptions } from 'vue';
+
+  const componentOptions: ComponentOptions;
+  export default componentOptions;
+}
