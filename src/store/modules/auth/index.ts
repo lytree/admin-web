@@ -94,34 +94,5 @@ export const useAuthStore = defineStore('auth-store', {
       }
       this.loginLoading = false;
     }
-    // /**
-    //  * 更换用户权限(切换账号)
-    //  * @param userRole
-    //  */
-    // async updateUserRole(userRole: ApiAuth.RoleType) {
-    //   const { resetRouteStore, initAuthRoute } = useRouteStore();
-
-    //   const accounts: Record<Auth.RoleType, { userName: string; password: string }> = {
-    //     super: {
-    //       userName: 'Super',
-    //       password: 'super123'
-    //     },
-    //     admin: {
-    //       userName: 'Admin',
-    //       password: 'admin123'
-    //     },
-    //     user: {
-    //       userName: 'User01',
-    //       password: 'user01123'
-    //     }
-    //   };
-    //   const { userName, password } = accounts[userRole];
-    //   const { data } = await fetchLogin(userName, password);
-    //   if (data) {
-    //     await this.loginByToken(data);
-    //     resetRouteStore();
-    //     initAuthRoute();
-    //   }
-    // }
   }
 });

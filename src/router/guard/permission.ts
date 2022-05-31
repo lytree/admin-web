@@ -1,6 +1,7 @@
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router';
 import { routeName } from '@/router';
 import { exeStrategyActions, getToken } from '@/utils';
+import { fetchRefresh } from '@/service/api';
 import { createDynamicRouteGuard } from './dynamic';
 
 /** 处理路由页面的权限 */
@@ -21,8 +22,9 @@ export async function createPermissionGuard(
   }
 
   const isLogin = Boolean(getToken());
-  const needLogin = true;
-  const hasPermission = true;
+  if (Boolean(getToken()) && to.name !== routeName('login')) {
+    fetchRefresh();
+  }
 
   const actions: Common.StrategyAction[] = [
     // 已登录状态跳转登录页，跳转至首页
@@ -32,16 +34,10 @@ export async function createPermissionGuard(
         next({ name: routeName('root') });
       }
     ],
-    // 不需要登录权限的页面直接通行
-    [
-      !needLogin,
-      () => {
-        next();
-      }
-    ],
+
     // 未登录状态进入需要登录权限的页面
     [
-      !isLogin && needLogin,
+      !isLogin,
       () => {
         const redirect = to.fullPath;
         next({ name: routeName('login'), query: { redirect } });
@@ -49,16 +45,9 @@ export async function createPermissionGuard(
     ],
     // 登录状态进入需要登录权限的页面，有权限直接通行
     [
-      isLogin && needLogin && hasPermission,
+      isLogin,
       () => {
         next();
-      }
-    ],
-    [
-      // 登录状态进入需要登录权限的页面，无权限，重定向到无权限页面
-      isLogin && needLogin && !hasPermission,
-      () => {
-        next({ name: routeName('no-permission') });
       }
     ]
   ];

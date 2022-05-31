@@ -22,8 +22,8 @@ export function fetchLogin(userName: string, password: string) {
 }
 
 /** 获取用户信息 */
-export function fetchUserInfo() {
-  return mockRequest.get<ApiAuth.UserInfo>('/getUserInfo');
+export function fetchRefresh() {
+  return request.get<ApiAuth.UserInfo>('/login/refresh');
 }
 
 /**

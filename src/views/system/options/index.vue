@@ -12,7 +12,6 @@
       >
         <n-tab-pane name="signin" tab="常规设置">
           <general-tab></general-tab>
-          
         </n-tab-pane>
         <n-tab-pane name="signup" tab="文章设置">
           <n-button type="primary" block secondary strong> 注册 </n-button>

@@ -65,8 +65,8 @@ export const useRouteStore = defineStore('route-store', {
 
       this.cacheRoutes = getCacheRoutes(vueRoutes);
     },
-    /** 初始化动态路由 */
-    async initDynamicRoute() {
+    /** 初始化静态路由 */
+    async initStaticRoute() {
       this.handleAuthRoutes(staticRoutes);
     },
     /** 初始化权限路由 */
@@ -75,7 +75,7 @@ export const useRouteStore = defineStore('route-store', {
       const { id } = getUserInfo();
 
       if (!id) return;
-      await this.initDynamicRoute();
+      await this.initStaticRoute();
 
       initHomeTab(this.routeHomeName, router);
 
