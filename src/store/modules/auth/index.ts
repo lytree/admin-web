@@ -1,4 +1,6 @@
+import { unref } from 'vue';
 import { defineStore } from 'pinia';
+import { router } from '@/router';
 import { useRouterPush } from '@/composables';
 import { fetchLogin } from '@/service';
 import { getUserInfo, getToken, setUserInfo, setToken, clearAuthStorage } from '@/utils';
@@ -32,6 +34,8 @@ export const useAuthStore = defineStore('auth-store', {
       const { toLogin } = useRouterPush(false);
       const { resetTabStore } = useTabStore();
       const { resetRouteStore } = useRouteStore();
+      const route = unref(router.currentRoute);
+
       clearAuthStorage();
       this.$reset();
       resetTabStore();
