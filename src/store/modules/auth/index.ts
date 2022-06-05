@@ -34,7 +34,6 @@ export const useAuthStore = defineStore('auth-store', {
       const { toLogin } = useRouterPush(false);
       const { resetTabStore } = useTabStore();
       const { resetRouteStore } = useRouteStore();
-      const route = unref(router.currentRoute);
 
       clearAuthStorage();
       this.$reset();

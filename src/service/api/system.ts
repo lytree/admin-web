@@ -11,7 +11,7 @@ export function fetchSystemConfig(key: string) {
 export interface Options {
   id: string;
   optionName: string;
-  optionComponents: string;
+  optionComponent: string;
   optionKey: string;
   optionValue: string;
   optionLevel: string;

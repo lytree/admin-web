@@ -51,7 +51,9 @@ declare namespace AuthRoute {
     | 'system'
     | 'system_about'
     | 'system_options'
-    | 'system_tools';
+    | 'system_tools'
+    | 'user_profile'
+    | 'user';
 
   /** 路由的path */
   type RoutePath =

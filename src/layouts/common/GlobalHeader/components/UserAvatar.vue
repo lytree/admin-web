@@ -8,11 +8,12 @@
 </template>
 
 <script lang="ts" setup>
+import { useRouter } from 'vue-router';
 import { useAuthStore, useThemeStore } from '@/store';
 import { iconifyRender } from '@/utils';
 
 type DropdownKey = 'user-center' | 'logout';
-
+const router = useRouter();
 const auth = useAuthStore();
 const theme = useThemeStore();
 
@@ -45,6 +46,9 @@ function handleDropdown(optionKey: string) {
         auth.resetAuthStore();
       }
     });
+  }
+  if (key === 'user-center') {
+    router.push('/user/profile');
   }
 }
 </script>

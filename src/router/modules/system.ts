@@ -9,7 +9,7 @@ const systemSetting: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '设置',
-        icon: 'fluent:book-information-24-regular',
+        icon: 'fluent:settings-32-regular',
         order: 1
       }
     },

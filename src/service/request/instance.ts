@@ -74,6 +74,8 @@ export default class CustomAxiosInstance {
           const error = handleBackendError(backend, this.backendConfig);
           return handleServiceResult(error, null);
         }
+        const { resetAuthStore } = useAuthStore();
+        resetAuthStore();
         const error = handleResponseError(response);
         return handleServiceResult(error, null);
       },

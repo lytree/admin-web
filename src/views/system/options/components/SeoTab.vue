@@ -30,24 +30,14 @@ const optionsGroup = ref<OptionsGroup>({
 });
 const formRef = ref<FormInst | null>(null);
 onMounted(async () => {
-  const { data } = await fetchSystemConfig('global_system_settings');
+  const { data } = await fetchSystemConfig('global_seo_settings');
   if (data) {
+
     optionsGroup.value = data;
   }
   return null;
 });
-
-const options = [
-  {
-    label: '全文',
-    value: 'full'
-  },
-  {
-    label: '摘要',
-    value: 'summary'
-  }
-];
 function save() {
-  console.log(JSON.stringify(options));
+  console.log(optionsGroup.value);
 }
 </script>

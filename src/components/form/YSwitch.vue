@@ -1,6 +1,6 @@
 <template>
-  <n-form-item :label="name" path="value"
-    ><n-input v-model:value="modelValue" type="text" :placeholder="desc" />
+  <n-form-item :label="name" path="value">
+    <n-switch v-model:value="modelValue" checked-value="true" unchecked-value="false" />
   </n-form-item>
 </template>
 
@@ -17,11 +17,11 @@ interface Emits {
 }
 const props = withDefaults(defineProps<Props>(), {
   name: '',
-  value: '',
+  value: 'false',
   desc: ''
 });
-
 const emit = defineEmits<Emits>();
+
 const modelValue = computed({
   get() {
     return props.value;

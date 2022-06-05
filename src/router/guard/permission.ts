@@ -21,11 +21,11 @@ export async function createPermissionGuard(
     return;
   }
 
-  const isLogin = Boolean(getToken());
-  if (Boolean(getToken()) && to.name !== routeName('login')) {
+  let isLogin = Boolean(getToken());
+  if (Boolean(getToken()) && from.name !== routeName('login')) {
     fetchRefresh();
   }
-
+  isLogin = Boolean(getToken());
   const actions: Common.StrategyAction[] = [
     // 已登录状态跳转登录页，跳转至首页
     [
