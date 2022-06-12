@@ -30,3 +30,18 @@ declare namespace ApiDemo {
     dataName: string;
   }
 }
+declare namespace PageInfo {
+  interface Page<T> {
+    content: T[];
+    hasContent: boolean;
+    hasNext: boolean;
+    hasPrevious: boolean;
+    isEmpty: boolean;
+    isFirst: boolean;
+    isLast: boolean;
+    page: number;
+    pages: number;
+    rpp: number;
+    total: number;
+  }
+}

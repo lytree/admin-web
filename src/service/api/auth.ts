@@ -21,11 +21,14 @@ export function fetchLogin(userName: string, password: string) {
   return request.form<ApiAuth.UserInfo>('/login/userLogin', form);
 }
 
-/** 获取用户信息 */
+/** 刷新token */
 export function fetchRefresh() {
   return request.get<ApiAuth.UserInfo>('/login/refresh');
 }
-
+/** 获取用户信息 */
+export function fetchUserInfo() {
+  return request.get<ApiAuth.UserInfo>('/api/admin/user/profiles');
+}
 /**
  * 获取用户路由数据
  * @param userId - 用户id

@@ -58,7 +58,6 @@ export const useRouteStore = defineStore('route-store', {
       this.searchMenus = transformAuthRoutesToSearchMenus(routes);
 
       const vueRoutes = transformAuthRoutesToVueRoutes(routes);
-
       vueRoutes.forEach(route => {
         router.addRoute(route);
       });

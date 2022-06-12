@@ -26,9 +26,47 @@ module.exports = {
     '@vue/eslint-config-prettier',
     '@vue/typescript/recommended'
   ],
+  overrides: [
+    {
+      files: ['*.vue'],
+      rules: {
+        'no-undef': 'off'
+      }
+    },
+    {
+      files: ['*.html'],
+      rules: {
+        'vue/comment-directive': 'off'
+      }
+    }
+  ],
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          ['~', '.'],
+          ['@', './src']
+        ],
+        extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx', '.d.ts']
+      },
+      node: {
+        extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx', '.d.ts']
+      }
+    }
+  },
   rules: {
-    'import/extensions': 'off',
-    'import/no-extraneous-dependencies': 'off',
+    'import/extensions': [
+      'warn',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        mjs: 'never',
+        ts: 'never',
+        tsx: 'never'
+      }
+    ],
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true, peerDependencies: true }],
     'import/order': [
       'error',
       {
@@ -144,7 +182,7 @@ module.exports = {
         pathGroupsExcludedImportTypes: ['vue', 'vue-router', 'vuex', 'pinia', 'naive-ui']
       }
     ],
-    'import/no-unresolved': 'off',
+    'import/no-unresolved': ['error', { ignore: ['uno.css', '~icons/*'] }],
     'import/prefer-default-export': 'off',
     'max-classes-per-file': 'off',
     'no-param-reassign': [
@@ -163,7 +201,6 @@ module.exports = {
         ignores: ['index']
       }
     ],
-    '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/no-empty-interface': [
       'error',
       {
@@ -175,19 +212,5 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     '@typescript-eslint/no-unused-vars': ['warn', { ignoreRestSiblings: true, varsIgnorePattern: '^_' }],
     '@typescript-eslint/no-use-before-define': ['error', { classes: true, functions: false, typedefs: false }]
-  },
-  overrides: [
-    {
-      files: ['*.vue'],
-      rules: {
-        'no-undef': 'off'
-      }
-    },
-    {
-      files: ['*.html'],
-      rules: {
-        'vue/comment-directive': 'off'
-      }
-    }
-  ]
+  }
 };

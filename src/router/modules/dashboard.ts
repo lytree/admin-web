@@ -9,7 +9,6 @@ const dashboard: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '分析页',
-
         icon: 'icon-park-outline:analysis'
       }
     },
@@ -19,9 +18,17 @@ const dashboard: AuthRoute.Route = {
       component: 'self',
       meta: {
         title: '工作台',
-
         permissions: ['super', 'admin'],
         icon: 'icon-park-outline:workbench'
+      }
+    },
+    {
+      name: 'dashboard_user',
+      path: '/dashboard/user',
+      component: 'self',
+      meta: {
+        title: '个人信息',
+        icon: 'carbon:user-filled'
       }
     }
   ],

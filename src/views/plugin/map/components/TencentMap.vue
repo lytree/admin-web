@@ -1,5 +1,5 @@
 <template>
-  <div ref="domRef"></div>
+  <div ref="domRef" class="w-full h-full"></div>
 </template>
 
 <script setup lang="ts">
@@ -11,19 +11,20 @@ const { load } = useScriptTag(TENCENT_MAP_SDK_URL);
 
 const domRef = ref<HTMLDivElement | null>(null);
 
-async function renderBaiduMap() {
-  if (!domRef.value) return;
+async function renderMap() {
   await load(true);
-  const map = new TMap.Map(domRef.value, {
+  if (!domRef.value) return;
+  // eslint-disable-next-line no-new
+  new TMap.Map(domRef.value, {
     center: new TMap.LatLng(39.98412, 116.307484),
     zoom: 11,
     viewMode: '3D'
   });
-  window.console.log(map);
 }
 
 onMounted(() => {
-  renderBaiduMap();
+  renderMap();
 });
 </script>
+
 <style scoped></style>

@@ -4,48 +4,44 @@ const document: AuthRoute.Route = {
   component: 'basic',
   children: [
     {
-      name: 'document_vue',
-      path: '/document/vue',
+      name: 'document_list',
+      path: '/document/list',
       component: 'self',
       meta: {
-        title: 'vue文档',
-
-        icon: 'mdi:vuejs'
+        title: '所有文章',
+        icon: 'mdi:circle-edit-outline'
       }
     },
     {
-      name: 'document_vue-new',
-      path: '/document/vue-new',
+      name: 'document_edit',
+      path: '/document/edit',
       component: 'self',
       meta: {
-        title: 'vue文档(新版)',
-
-        icon: 'mdi:vuejs'
+        title: '写文章',
+        icon: 'ic:outline-edit'
       }
     },
     {
-      name: 'document_vite',
-      path: '/document/vite',
+      name: 'document_categories',
+      path: '/document/categories',
       component: 'self',
       meta: {
-        title: 'vite文档',
-
-        icon: 'simple-icons:vite'
+        title: '文章分类',
+        icon: 'carbon:categories'
       }
     },
     {
-      name: 'document_project',
-      path: '/document/project',
+      name: 'document_tags',
+      path: '/document/tags',
+      component: 'self',
       meta: {
-        title: '项目文档(外链)',
-
-        icon: 'mdi:file-link-outline',
-        href: 'https://docs.soybean.pro/'
+        title: '文章标签',
+        icon: 'mdi:tag'
       }
     }
   ],
   meta: {
-    title: '文档',
+    title: '文章',
     icon: 'carbon:document',
     order: 2
   }

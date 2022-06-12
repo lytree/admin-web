@@ -4,6 +4,16 @@ const systemSetting: AuthRoute.Route = {
   component: 'basic',
   children: [
     {
+      name: 'system_menu',
+      path: '/system/menu',
+      component: 'self',
+      meta: {
+        title: '目录设置',
+        icon: 'cil:menu',
+        order: 1
+      }
+    },
+    {
       name: 'system_options',
       path: '/system/options',
       component: 'self',
@@ -13,6 +23,7 @@ const systemSetting: AuthRoute.Route = {
         order: 1
       }
     },
+
     {
       name: 'system_about',
       path: '/system/about',

@@ -1,7 +1,6 @@
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router';
 import { routeName } from '@/router';
 import { exeStrategyActions, getToken } from '@/utils';
-import { fetchRefresh } from '@/service/api';
 import { createDynamicRouteGuard } from './dynamic';
 
 /** 处理路由页面的权限 */
@@ -21,11 +20,7 @@ export async function createPermissionGuard(
     return;
   }
 
-  let isLogin = Boolean(getToken());
-  if (Boolean(getToken()) && from.name !== routeName('login')) {
-    fetchRefresh();
-  }
-  isLogin = Boolean(getToken());
+  const isLogin = Boolean(getToken());
   const actions: Common.StrategyAction[] = [
     // 已登录状态跳转登录页，跳转至首页
     [

@@ -1,6 +1,4 @@
-import { unref } from 'vue';
 import { defineStore } from 'pinia';
-import { router } from '@/router';
 import { useRouterPush } from '@/composables';
 import { fetchLogin } from '@/service';
 import { getUserInfo, getToken, setUserInfo, setToken, clearAuthStorage } from '@/utils';

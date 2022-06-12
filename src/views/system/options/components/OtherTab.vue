@@ -10,7 +10,7 @@
       :desc="item.optionDesc"
     ></component>
   </n-form>
-  <n-button type="primary" block secondary strong @click="save"> 保存 </n-button>
+  <n-button type="primary" block secondary strong> 保存 </n-button>
 </template>
 
 <script lang="ts" setup>
@@ -36,7 +36,4 @@ onMounted(async () => {
   }
   return null;
 });
-function save() {
-  console.log(optionsGroup.value);
-}
 </script>
