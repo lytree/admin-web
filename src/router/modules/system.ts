@@ -8,7 +8,7 @@ const systemSetting: AuthRoute.Route = {
       path: '/system/menu',
       component: 'self',
       meta: {
-        title: '目录设置',
+        title: '目录',
         icon: 'cil:menu',
         order: 1
       }

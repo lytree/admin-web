@@ -2,7 +2,7 @@ import qs from 'qs';
 import { request } from '../request';
 
 /**
- * 获取验证码
+ * 获取评论列表
  * @param phone - 手机号
  * @returns - 返回boolean值表示是否发送成功
  */

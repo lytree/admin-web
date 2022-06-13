@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <n-card>
     <n-modal v-model:show="dialogShow" :bordered="false" preset="card" class="w-[1024px]" :mask-closable="true">
       <n-form ref="formRef" label-width="80">
         <div class="grid grid-cols-4 gap-4">
@@ -35,7 +35,7 @@
       ></n-list>
     </n-modal>
     <attachment-upload-modal v-model:visible="uploadVisible" />
-  </div>
+  </n-card>
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';

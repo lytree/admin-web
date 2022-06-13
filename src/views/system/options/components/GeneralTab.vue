@@ -17,9 +17,9 @@
 import { onMounted, ref } from 'vue';
 import { FormInst } from 'naive-ui';
 import { component } from '@/components';
-import { fetchSystemConfig } from '@/service/api/system';
-import type { OptionsGroup } from '@/service/api/system';
+import { fetchSystemConfig, saveSystemConfigs, type OptionsGroup } from '@/service/api/system';
 
+const formRef = ref<FormInst | null>(null);
 const optionsGroup = ref<OptionsGroup>({
   id: '',
   groupName: '',
@@ -28,7 +28,7 @@ const optionsGroup = ref<OptionsGroup>({
     { id: '', optionName: '', optionComponent: '', optionKey: '', optionValue: '', optionLevel: '', status: 1 }
   ]
 });
-const formRef = ref<FormInst | null>(null);
+
 onMounted(async () => {
   const { data } = await fetchSystemConfig('global_system_settings');
   if (data) {
@@ -37,17 +37,8 @@ onMounted(async () => {
   return null;
 });
 
-const options = [
-  {
-    label: '全文',
-    value: 'full'
-  },
-  {
-    label: '摘要',
-    value: 'summary'
-  }
-];
 function save() {
-  console.log(JSON.stringify(options));
+  console.log(optionsGroup.value);
+  saveSystemConfigs(optionsGroup.value.optionList);
 }
 </script>
