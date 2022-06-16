@@ -88,7 +88,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import { fetchUserInfo } from '@/service/api';
+import { fetchUserInfo } from '@/service/api/auth';
 import PhLinkSimpleDuotone from '~icons/ph/link-simple-duotone';
 import IcRoundEmail from '~icons/ic/round-email';
 import IcRoundCalendarToday from '~icons/ic/round-calendar-today';

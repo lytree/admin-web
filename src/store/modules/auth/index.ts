@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { useRouterPush } from '@/composables';
-import { fetchLogin } from '@/service';
 import { getUserInfo, getToken, setUserInfo, setToken, clearAuthStorage } from '@/utils';
+import { fetchLogin } from '@/service/api/auth';
 import { useTabStore } from '../tab';
 import { useRouteStore } from '../route';
 

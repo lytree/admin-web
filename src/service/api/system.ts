@@ -6,16 +6,16 @@ import { request } from '../request';
  * @returns - 配置项数组
  */
 export function fetchSystemConfig(key: string) {
-  return request.get<OptionsGroup>(`/api/admin/options_group/${key}`);
+  return request.get<OptionsGroup>(`/admin/options_group/${key}`);
 }
 export function saveSystemConfig(option: Options) {
-  return request.post<Options>(`/api/admin/options/create`, option);
+  return request.post<Options>(`/admin/options/create`, option);
 }
 export function saveSystemConfigs(options: Options[]) {
-  return request.post<Options>(`/api/admin/options/batch_create`, options);
+  return request.post<Options>(`/admin/options/batch_create`, options);
 }
 export function fetchSystemMenu() {
-  return request.get<Menu>(`/api/admin/menus/tree_view`);
+  return request.get<Menu>(`/admin/menus/tree_view`);
 }
 
 export interface Menu {

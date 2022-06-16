@@ -27,7 +27,7 @@ export function fetchRefresh() {
 }
 /** 获取用户信息 */
 export function fetchUserInfo() {
-  return request.get<ApiAuth.UserInfo>('/api/admin/user/profiles');
+  return request.get<ApiAuth.UserInfo>('/admin/user/profiles');
 }
 /**
  * 获取用户路由数据

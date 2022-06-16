@@ -1,6 +1,6 @@
 import { computed } from 'vue';
 import { REGEXP_PHONE } from '@/config';
-import { fetchSmsCode } from '@/service';
+import { fetchSmsCode } from '@/service/api/auth';
 import { useLoading } from '../common';
 import useCountDown from './useCountDown';
 
