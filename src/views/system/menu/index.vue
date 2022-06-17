@@ -1,22 +1,30 @@
 <template>
   <div class="h-full grid grid-cols-6 gap-4">
     <div class="col-span-2">
-      <n-card class="min-h-560px" title="添加分类">
-        <n-form ref="formRef" :model="category">
+      <n-card class="min-h-560px" title="添加目录">
+        <n-form ref="formRef" :model="menu">
           <n-form-item label="名称">
-            <n-input v-model:value="category.slugName"></n-input>
+            <n-input v-model:value="menu.slugName"></n-input>
           </n-form-item>
           <n-form-item label="别名">
-            <n-input v-model:value="category.slug"></n-input>
+            <n-input v-model:value="menu.slug"></n-input>
           </n-form-item>
           <n-form-item label="上级目录">
-            <n-tree-select v-model:value="category.parentId" :options="options" />
+            <n-tree-select
+              v-model:value="menu.parentId"
+              children-field="children"
+              key-field="id"
+              label-field="slugName"
+              clearable
+              placeholder="选择空为根节点"
+              :options="options"
+            />
           </n-form-item>
-          <n-form-item label="封面图">
-            <n-input v-model:value="category.thumbnail"></n-input>
+          <n-form-item label="图标">
+            <n-input v-model:value="menu.icon"></n-input>
           </n-form-item>
           <n-form-item label="描述">
-            <n-input v-model:value="category.description" type="textarea"></n-input>
+            <n-input v-model:value="menu.description" type="textarea"></n-input>
           </n-form-item>
           <div style="display: flex; justify-content: flex-end">
             <n-button round type="primary" @click="saveCategory"> 保存 </n-button>
@@ -25,42 +33,91 @@
       </n-card>
     </div>
     <div class="col-span-4">
-      <n-card class="min-h-560px" title="分类列表">
-        <n-tree block-line draggable :data="data" :render-suffix="renderSuffix" :selectable="false" @drop="handleDrop"
+      <n-card class="min-h-560px" title="目录列表">
+        <n-tree
+          block-line
+          draggable
+          :data="options"
+          children-field="children"
+          key-field="id"
+          label-field="slugName"
+          clearable
+          default-expand-all
+          :render-label="renderLabel"
+          :selectable="false"
+          @drop="handleDrop"
       /></n-card>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, h, onMounted, ref } from 'vue';
-import { FormInst, useMessage, NButton, TreeOption, TreeDropInfo } from 'naive-ui';
-import { type Category, list, save } from '@/service/api/category';
+import { h, onMounted, ref } from 'vue';
+import {
+  FormInst,
+  useMessage,
+  NButton,
+  NSpace,
+  TreeOption,
+  TreeDropInfo,
+  NList,
+  NListItem,
+  NThing,
+  NAvatar
+} from 'naive-ui';
+import { type Menu, save, treeView } from '@/service/api/menu';
+import AntDesignBarsOutlined from '~icons/ant-design/bars-outlined';
 
 const formRef = ref<FormInst | null>(null);
 const message = useMessage();
-let options = reactive<Category[]>([]);
-const category = reactive<Category>({ id: '', slugName: '', slug: '', parentId: '', thumbnail: '', description: '' });
+const options = ref<Menu[]>([]);
+const menu = ref<Menu>({ id: '', slugName: '', slug: '', parentId: '', icon: '', description: '' });
 onMounted(async () => {
-  const { data } = await list();
+  const { data } = await treeView();
   if (data) {
-    options = data;
+    options.value = data;
   }
 });
+
 const data = ref([]);
 
 function saveCategory() {
   formRef.value?.validate(errors => {
     if (!errors) {
-      save(category);
+      save(menu.value).then(req => {
+        if (req.data) {
+          options.value = req.data;
+        }
+      });
     } else {
-      console.log(errors);
       message.error('验证失败');
     }
   });
 }
-function renderSuffix({ option }: { option: TreeOption }) {
-  return h(NButton, { text: true, type: 'primary' }, { default: () => `Suffix-${option.level}` });
+
+function renderLabel({ option }: { option: TreeOption }) {
+  return h(NList, { bordered: true }, () =>
+    h(
+      NListItem,
+      { class: 'px-1' },
+      {
+        default: () =>
+          h(
+            NThing,
+            { title: `${option.slugName}` },
+            {
+              avatar: () => h(AntDesignBarsOutlined),
+              default: () => `${option.slug}`
+            }
+          ),
+        suffix: () =>
+          h(NSpace, { class: 'w-72px' }, () => [
+            h(NButton, { text: true, type: 'primary' }, { default: () => `修改` }),
+            h(NButton, { text: true, type: 'primary' }, { default: () => `删除` })
+          ])
+      }
+    )
+  );
 }
 
 function findSiblingsAndIndex(node: TreeOption, nodes?: TreeOption[]): [TreeOption[], number] | [null, null] {
@@ -75,6 +132,7 @@ function findSiblingsAndIndex(node: TreeOption, nodes?: TreeOption[]): [TreeOpti
   return [null, null];
 }
 function handleDrop({ node, dragNode, dropPosition }: TreeDropInfo) {
+  console.log(node, dragNode, dropPosition);
   const [dragNodeSiblings, dragNodeIndex] = findSiblingsAndIndex(dragNode, data.value);
   if (dragNodeSiblings === null || dragNodeIndex === null) return;
   dragNodeSiblings.splice(dragNodeIndex, 1);
