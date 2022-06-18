@@ -28,12 +28,13 @@
 import { ref, computed } from 'vue';
 import { Icon } from '@iconify/vue';
 import { useThemeStore } from '@/store';
+import { icons } from './icons';
 
 interface Props {
   /** 选中的图标 */
   value: string;
   /** 图标列表 */
-  icons: string[];
+  icons?: string[];
   /** 未选中图标 */
   emptyIcon?: string;
 }
@@ -43,7 +44,8 @@ interface Emits {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  emptyIcon: 'mdi:apps'
+  emptyIcon: 'mdi:apps',
+  icons: () => icons
 });
 
 const emit = defineEmits<Emits>();

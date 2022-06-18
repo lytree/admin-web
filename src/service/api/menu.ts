@@ -21,6 +21,13 @@ export function save(menu: Menu) {
 export function treeView() {
   return request.get<Menu[]>(`/admin/menus/tree_view`);
 }
+/**
+ *
+ * @returns list
+ */
+export function deleteMenu(id: string) {
+  return request.delete<Menu[]>(`/admin/menus/${id}`);
+}
 /** 后端返回的路由相关类型 */
 
 export interface Menu {
@@ -28,7 +35,7 @@ export interface Menu {
   slugName: string;
   slug: string;
   parentId: string;
-  description: string;
+  target: string;
   icon: string;
   priority?: number;
   children?: Menu[];
