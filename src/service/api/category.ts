@@ -21,6 +21,13 @@ export function save(category: Category) {
 export function treeView() {
   return request.get<Category[]>(`/admin/category/tree_view`);
 }
+/**
+ *
+ * @returns list
+ */
+export function deleteCategory(id: string) {
+  return request.delete<Category[]>(`/admin/category/${id}`);
+}
 /** 后端返回的路由相关类型 */
 
 export interface Category {

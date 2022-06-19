@@ -23,6 +23,7 @@ declare namespace AuthRoute {
     | 'document_tags'
     | 'document_categories'
     | 'component'
+    | 'comments'
     | 'comments_list'
     | 'component_button'
     | 'component_card'
