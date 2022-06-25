@@ -38,7 +38,7 @@
               :key="tag.id"
               :style="{ '--n-close-icon-color': `${tag.color}` }"
               :color="{
-                color: theme.darkMode ? `black` : `white`,
+                color: theme.darkMode ? '#000000' : '#FFFFFF',
                 textColor: tag.color,
                 borderColor: tag.color
               }"

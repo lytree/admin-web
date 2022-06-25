@@ -64,7 +64,7 @@
               key-field="id"
               label-field="slugName"
               clearable
-              placeholder="选择空为根节点"
+              placeholder="选择节点"
               :options="options"
             />
           </n-form-item>
