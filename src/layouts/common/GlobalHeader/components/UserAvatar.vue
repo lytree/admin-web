@@ -48,7 +48,7 @@ function handleDropdown(optionKey: string) {
     });
   }
   if (key === 'user-center') {
-    router.push('dashboard/user');
+    router.push('/dashboard/user');
   }
 }
 </script>

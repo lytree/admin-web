@@ -3,17 +3,17 @@
     <n-form ref="formRef">
       <n-tabs type="line" animated default-value="general">
         <n-tab-pane name="seo" tab="SEO">
-          <n-form-item label="自定义关键词" >
+          <n-form-item label="自定义关键词">
             <n-input
-              v-model:value="postDetail.metaKeywords"
+              v-model:value="post.metaKeywords"
               :auto-size="{ minRows: 5 }"
               type="textarea"
               placeholder="多个关键词以英文逗号隔开，如不填写，将自动使用标签作为关键词"
             />
           </n-form-item>
-          <n-form-item label="自定义描述" >
+          <n-form-item label="自定义描述">
             <n-input
-              v-model:value="postDetail.metaDescription"
+              v-model:value="post.metaDescription"
               :auto-size="{ minRows: 5 }"
               type="textarea"
               placeholder="如不填写，会从文章中自动截取"
@@ -22,20 +22,20 @@
         </n-tab-pane>
         <n-tab-pane name="general" tab="常规">
           <n-form-item label="文章标题">
-            <n-input v-model:value="postDetail.postTitle" />
+            <n-input v-model:value="post.title" />
           </n-form-item>
           <n-form-item label="文章别名">
-            <n-input v-model:value="postDetail.postSlug"> </n-input>
+            <n-input v-model:value="post.slug" />
           </n-form-item>
           <n-form-item label="分类目录">
-            <category-tree ref="categoryTree" v-model:checkedKeys="postDetail.categoryIds" />
+            <category-tree ref="categoryTree" v-model:checkedKey="post.categoryIds" />
           </n-form-item>
           <n-form-item label="标签">
-            <tag-select v-model:tagIds="postDetail.tagIds" />
+            <tag-select v-model:tagIds="post.tagIds" />
           </n-form-item>
           <n-form-item label="摘要">
             <n-input
-              v-model:value="postDetail.summary"
+              v-model:value="post.summary"
               :auto-size="{ minRows: 5 }"
               placeholder="如不填写，会从文章中自动截取"
               type="textarea"
@@ -44,14 +44,14 @@
         </n-tab-pane>
         <n-tab-pane name="highClass" tab="高级"
           ><n-form-item label="禁止评论">
-            <n-switch v-model:value="postDetail.disallowComment" />
+            <n-switch v-model:value="post.disallowComment" :checked-value="1" :unchecked-value="0" />
           </n-form-item>
           <n-form-item label="是否置顶">
-            <n-switch v-model:value="postDetail.topPriority" />
+            <n-switch v-model:value="post.topPriority" :checked-value="1" :unchecked-value="0" />
           </n-form-item>
           <n-form-item label="发表时间：" class="w-50%">
             <n-date-picker
-              v-model:value="postDetail.publicTime"
+              v-model:value="post.publicTime"
               placement="bottom-start"
               format="yyyy.MM.dd HH:mm:ss"
               placeholder="选择文章发表时间"
@@ -62,11 +62,12 @@
           </n-form-item>
 
           <n-form-item label="访问密码：" class="w-50%">
-            <n-input v-model:value="postDetail.password" type="password" />
+            <n-input v-model:value="post.password" type="password" />
           </n-form-item>
           <n-form-item label="封面图：" class="w-50%">
+            <n-image :src="post.thumbnail"></n-image>
             <n-input
-              v-model:value="postDetail.thumbnail"
+              v-model:value="post.thumbnail"
               allow-clear
               placeholder="点击封面图选择图片，或者输入外部链接"
             ></n-input>
@@ -88,7 +89,7 @@
     </n-form>
     <template #action>
       <n-space justify="end"
-        ><n-button @click="createPost('1')">保存草稿</n-button> <n-button @click="createPost('2')">发布</n-button
+        ><n-button @click="createPost(1)">保存草稿</n-button> <n-button @click="createPost(2)">发布</n-button
         ><n-button @click="dialogShow = false">关闭</n-button></n-space
       >
     </template>
@@ -102,6 +103,7 @@ import AntDesignCloseOutlined from '~icons/ant-design/close-outlined';
 interface Props {
   visible: boolean;
   title?: string;
+  post: PostDetail;
 }
 interface Emits {
   (e: 'update:visible', value: boolean): void;
@@ -117,6 +119,7 @@ const dialogShow = computed({
   get: () => props.visible,
   set: val => emit('update:visible', val)
 });
+
 const message = useMessage();
 const formRef = ref<FormInst | null>(null);
 
@@ -131,25 +134,13 @@ function addMetaList() {
 function deleteMetaList(metaIndex: number) {
   customMetas.value = customMetas.value.filter((meta, index) => index !== metaIndex);
 }
-const postDetail = ref<PostDetail>({
-  id: '',
-  postTitle: '',
-  postStatus: '',
-  postSlug: '',
-  publicTime: 1656122269261,
-  metaKeywords: '',
-  metaDescription: '',
-  summary: '',
-  topPriority: false,
-  thumbnail: '',
-  disallowComment: false,
-  tagIds: [],
-  categoryIds: []
-});
-function createPost(status: string) {
+const { post } = toRefs(props);
+
+function createPost(_status: number) {
   formRef.value?.validate(errors => {
     if (!errors) {
-      savePost({ ...postDetail.value, postStatus: status });
+      post.value.status = _status;
+      savePost(post.value);
     } else {
       console.log(errors);
       message.error('Invalid');

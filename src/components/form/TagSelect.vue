@@ -1,6 +1,6 @@
 <template>
   <n-select
-    v-model="selectedTagId"
+    v-model:value="selectedTagId"
     :options="options"
     label-field="slugName"
     value-field="id"

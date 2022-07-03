@@ -142,6 +142,15 @@ function saveCategories() {
       save(saveCategory.value).then(req => {
         if (req.data) {
           options.value[0].children = req.data;
+          saveCategory.value = {
+            id: '',
+            slugName: '',
+            slug: '',
+            parentId: '',
+            priority: 0,
+            thumbnail: '',
+            description: ''
+          };
         }
       });
     } else {

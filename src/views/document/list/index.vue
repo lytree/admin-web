@@ -34,76 +34,147 @@
           <n-space justify="end"><n-button>查询</n-button><n-button>重置</n-button></n-space>
         </div>
       </div>
-      <loading-empty-wrapper class="h-520px" :loading="loading" :empty="empty">
+      <loading-empty-wrapper class="h-520px min-w-896px" :loading="loading" :empty="empty">
         <n-data-table
           :columns="columns"
           :data="dataSource"
           :flex-height="true"
           :pagination="paginationReactive"
-          :row-key="postId"
+          :row-key="rowKey => rowKey.id"
+          :remote="true"
           class="h-520px"
           @update:page="handlePageChange"
-        /> </loading-empty-wrapper
+          @update:page-size="handlePageSizeChange"
+        ></n-data-table> </loading-empty-wrapper
     ></n-space>
     <recycle-post-modal v-model:visible="recycleVisible"></recycle-post-modal>
+    <publish-post-modal v-model:visible="publicVisible" title="发布文章" :post="post"></publish-post-modal>
   </n-card>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import type { DataTableColumn } from 'naive-ui';
+import { ref, onMounted, VNodeChild } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { DataTableColumn, NButton, NSpace } from 'naive-ui';
 import { useLoadingEmpty } from '@/hooks';
 import { listPost, type PostDetail } from '@/service/api/post';
+import PublishPostModal from '../edit/component/PublishPostModal/index.vue';
 import { RecyclePostModal } from './component';
 import MaterialSymbolsAdd from '~icons/material-symbols/add';
 import MaterialSymbolsDelete from '~icons/material-symbols/delete';
 
 const { loading, startLoading, endLoading, empty, setEmpty } = useLoadingEmpty();
-
-const columns: DataTableColumn[] = [
+const router = useRouter();
+const route = useRoute();
+const columns: DataTableColumn<PostDetail>[] = [
   {
     title: '标题',
-    key: 'postTitle',
+    key: 'title',
     align: 'center'
   },
   {
     title: '状态',
-    key: 'postStatus'
+    key: 'status'
   },
   {
     title: '分类',
-    key: 'categories'
+    key: 'categories',
+    render: _ => {
+      return _.categories?.map(category => category.slugName).join(',');
+    }
   },
   {
     title: '标签',
-    key: 'tags'
+    key: 'tags',
+    render: _ => {
+      return _.tags?.map(tag => tag.slugName).join(',');
+    }
   },
   {
     title: '发布时间',
     key: 'publicTime'
+  },
+  {
+    title: '操作',
+    key: 'actions',
+    render(row) {
+      return h(NSpace, { class: 'w-128px' }, () => [
+        h(
+          NButton,
+          {
+            text: true,
+            type: 'primary',
+            onClick: () => {
+              if (row.id) {
+                router.push({ path: `/document/edit`, query: { postId: row.id } }).catch(err => err);
+              }
+            }
+          },
+          { default: () => `编辑` }
+        ),
+        h(NButton, { text: true, type: 'primary', onClick: () => `` }, { default: () => `删除` }),
+        h(NButton, { text: true, type: 'primary', onClick: () => `` }, { default: () => `设置` })
+      ]);
+    }
   }
 ];
 const recycleVisible = ref<boolean>(false);
+const publicVisible = ref<boolean>(false);
 const dataSource = ref<PostDetail[]>([]);
-const paginationReactive = ref({
+const keyword = ref<string>('');
+const post = ref<PostDetail>({
+  id: '',
+  title: '',
+  status: 0,
+  slug: '',
+  publicTime: 0,
+  metaKeywords: '',
+  metaDescription: '',
+  thumbnail: '',
+  summary: '',
+  password: '',
+  topPriority: 0,
+  disallowComment: 0,
+  tagIds: [],
+  categoryIds: []
+});
+const paginationReactive = ref<{
+  page: number;
+  itemCount: number;
+  pageCount: number;
+  showSizePicker: boolean;
+  pageSize: number;
+  pageSizes: number[];
+  prefix: (info: {
+    startIndex: number;
+    endIndex: number;
+    page: number;
+    pageSize: number;
+    pageCount: number;
+    itemCount: number | undefined;
+  }) => VNodeChild;
+}>({
   page: 1,
   pageCount: 1,
   pageSize: 10,
-  prefix({ itemCount }: { itemCount: number }) {
-    return `Total is ${itemCount}.`;
+  showSizePicker: true,
+  itemCount: 0,
+  pageSizes: [5, 10, 20, 30, 40],
+  prefix: ({ itemCount }) => {
+    return `总共 ${itemCount} 条`;
   }
-}) as any;
-
-const postId = (rowData: PostDetail) => {
-  return rowData.id;
-};
+});
 function getDataSource() {
   startLoading();
-  listPost({ keyword: '' }).then(req => {
+  listPost({
+    page: paginationReactive.value.page === undefined ? 0 : paginationReactive.value.page - 1,
+    size: paginationReactive.value.pageSize === undefined ? 10 : paginationReactive.value.pageSize - 1,
+    keyword: keyword.value
+  }).then(req => {
     if (req.data) {
       dataSource.value = req.data.content;
       paginationReactive.value.pageCount = req.data.pages;
-      paginationReactive.value.prefix({ itemCount: req.data.total });
+      paginationReactive.value.itemCount = req.data.total;
     }
     endLoading();
     setEmpty(!dataSource.value.length);
@@ -111,7 +182,12 @@ function getDataSource() {
 }
 
 function handlePageChange(currentPage: number) {
-  console.log(currentPage);
+  paginationReactive.value.page = currentPage;
+  getDataSource();
+}
+function handlePageSizeChange(pageSize: number) {
+  paginationReactive.value.pageSize = pageSize;
+  getDataSource();
 }
 onMounted(() => {
   getDataSource();
