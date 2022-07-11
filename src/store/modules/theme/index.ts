@@ -120,10 +120,7 @@ export const useThemeStore = defineStore('theme-store', {
     setMixSiderChildMenuWidth(width: number) {
       this.sider.mixChildMenuWidth = width;
     },
-    /** 设置水平模式的菜单的位置 */
-    setHorizontalMenuPosition(position: EnumType.ThemeHorizontalMenuPosition) {
-      this.menu.horizontalPosition = position;
-    },
+
     /** 设置底部是否固定 */
     setFooterIsFixed(isFixed: boolean) {
       this.footer.fixed = isFixed;

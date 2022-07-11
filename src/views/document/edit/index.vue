@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { getOne, PostDetail } from '@/service/api/post';
+import { getOneApi, PostDetail } from '@/service/api/post';
 import YMarkdown from '@/components/common/Markdown.vue';
 import PublishPostModal from './component/PublishPostModal/index.vue';
 
@@ -43,7 +43,7 @@ const post = ref<PostDetail>({
 });
 onMounted(async () => {
   if (route.query.postId) {
-    const { data } = await getOne(route.query.postId as string);
+    const { data } = await getOneApi(route.query.postId as string);
     if (data) {
       if (data.content === null) {
         data.content = '';

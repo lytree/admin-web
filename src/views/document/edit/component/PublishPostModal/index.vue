@@ -97,7 +97,7 @@
 </template>
 <script lang="ts" setup>
 import { FormInst, useMessage } from 'naive-ui';
-import { type PostDetail, savePost } from '@/service/api/post';
+import { type PostDetail, savePostApi } from '@/service/api/post';
 import AntDesignCloseOutlined from '~icons/ant-design/close-outlined';
 
 interface Props {
@@ -140,7 +140,7 @@ function createPost(_status: number) {
   formRef.value?.validate(errors => {
     if (!errors) {
       post.value.status = _status;
-      savePost(post.value);
+      savePostApi(post.value);
     } else {
       console.log(errors);
       message.error('Invalid');

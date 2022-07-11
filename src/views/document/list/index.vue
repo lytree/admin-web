@@ -57,7 +57,7 @@ import { ref, onMounted, VNodeChild } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { DataTableColumn, NButton, NSpace } from 'naive-ui';
 import { useLoadingEmpty } from '@/hooks';
-import { listPost, type PostDetail } from '@/service/api/post';
+import { listPostApi, updatePostStatusApi, type PostDetail } from '@/service/api/post';
 import PublishPostModal from '../edit/component/PublishPostModal/index.vue';
 import { RecyclePostModal } from './component';
 import MaterialSymbolsAdd from '~icons/material-symbols/add';
@@ -74,7 +74,22 @@ const columns: DataTableColumn<PostDetail>[] = [
   },
   {
     title: '状态',
-    key: 'status'
+    key: 'status',
+    render: _ => {
+      if (_.status === 'PUBLISHED') {
+        return '已发布';
+      }
+      if (_.status === 'RECYCLE') {
+        return '回收站';
+      }
+      if (_.status === 'INTIMATE') {
+        return '私密';
+      }
+      if (_.status === 'DRAFT') {
+        return '私密';
+      }
+      return '';
+    }
   },
   {
     title: '分类',
@@ -112,7 +127,11 @@ const columns: DataTableColumn<PostDetail>[] = [
           },
           { default: () => `编辑` }
         ),
-        h(NButton, { text: true, type: 'primary', onClick: () => `` }, { default: () => `删除` }),
+        h(
+          NButton,
+          { text: true, type: 'primary', onClick: () => updatePostStatus(row.id, 'DELETE') },
+          { default: () => `删除` }
+        ),
         h(NButton, { text: true, type: 'primary', onClick: () => `` }, { default: () => `设置` })
       ]);
     }
@@ -125,7 +144,7 @@ const keyword = ref<string>('');
 const post = ref<PostDetail>({
   id: '',
   title: '',
-  status: 0,
+  status: '',
   slug: '',
   publicTime: 0,
   metaKeywords: '',
@@ -166,7 +185,7 @@ const paginationReactive = ref<{
 });
 function getDataSource() {
   startLoading();
-  listPost({
+  listPostApi({
     page: paginationReactive.value.page === undefined ? 0 : paginationReactive.value.page - 1,
     size: paginationReactive.value.pageSize === undefined ? 10 : paginationReactive.value.pageSize - 1,
     keyword: keyword.value
@@ -188,6 +207,11 @@ function handlePageChange(currentPage: number) {
 function handlePageSizeChange(pageSize: number) {
   paginationReactive.value.pageSize = pageSize;
   getDataSource();
+}
+function updatePostStatus(id: string | undefined, status: string) {
+  if (id) {
+    updatePostStatusApi(id, status);
+  }
 }
 onMounted(() => {
   getDataSource();
