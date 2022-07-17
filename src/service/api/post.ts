@@ -3,17 +3,23 @@ import { request } from '../request';
 import { Category } from './category';
 import { Tag } from './tag';
 
+export const enum PostStatus {
+  PUBLISHED = 'PUBLISHED',
+  DRAFT = 'DRAFT',
+  INTIMATE = 'INTIMATE',
+  RECYCLE = 'RECYCLE'
+}
 export function listPostApi({
   page = 0,
   size = 10,
   keyword = '',
-  statuses = ['PUBLISHED', 'DRAFT', 'INTIMATE'],
+  statuses = [PostStatus.PUBLISHED, PostStatus.DRAFT, PostStatus.INTIMATE],
   more = true
 }: {
   page: number;
   size: number;
   keyword?: string;
-  statuses?: string[];
+  statuses?: PostStatus[];
   more?: boolean;
 }) {
   return request.get<PageInfo.Page<PostDetail>>(
@@ -41,10 +47,16 @@ export function updatePostStatusApi(id: string, status: string) {
 export function updatePostStatusBatchApi(ids: number[], status: string) {
   return request.put<PostDetail>(`/admin/posts/status/${status}`, ids);
 }
+export function deletePostByIds(ids: string[]) {
+  return request.delete<void>(`/admin/posts`, ids);
+}
+export function deletePostById(id: string) {
+  return request.delete(`/admin/posts${id}`);
+}
 export interface PostDetail {
   id?: string;
   title: string;
-  status: string;
+  status: PostStatus;
   slug: string;
   publicTime: number;
   metaKeywords: string;
@@ -58,5 +70,6 @@ export interface PostDetail {
   categoryIds: string[];
   tags?: Tag[];
   categories?: Category[];
-  content?: string;
+  formatContent?: string;
+  originalContent?: string;
 }

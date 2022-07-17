@@ -47,17 +47,18 @@
           @update:page-size="handlePageSizeChange"
         ></n-data-table> </loading-empty-wrapper
     ></n-space>
-    <recycle-post-modal v-model:visible="recycleVisible"></recycle-post-modal>
+    <recycle-post-modal v-model:visible="recycleVisible" @update-list="getDataSource()"></recycle-post-modal>
     <publish-post-modal v-model:visible="publicVisible" title="发布文章" :post="post"></publish-post-modal>
   </n-card>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, VNodeChild } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { DataTableColumn, NButton, NSpace } from 'naive-ui';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { DataTableColumn, NButton, NSpace, useMessage } from 'naive-ui';
 import { useLoadingEmpty } from '@/hooks';
-import { listPostApi, updatePostStatusApi, type PostDetail } from '@/service/api/post';
+import { listPostApi, PostStatus, updatePostStatusApi, type PostDetail } from '@/service/api/post';
+import { resetPost, resetPagination, type Pagination } from '@/views/document/common';
 import PublishPostModal from '../edit/component/PublishPostModal/index.vue';
 import { RecyclePostModal } from './component';
 import MaterialSymbolsAdd from '~icons/material-symbols/add';
@@ -65,7 +66,7 @@ import MaterialSymbolsDelete from '~icons/material-symbols/delete';
 
 const { loading, startLoading, endLoading, empty, setEmpty } = useLoadingEmpty();
 const router = useRouter();
-const route = useRoute();
+const message = useMessage();
 const columns: DataTableColumn<PostDetail>[] = [
   {
     title: '标题',
@@ -86,7 +87,7 @@ const columns: DataTableColumn<PostDetail>[] = [
         return '私密';
       }
       if (_.status === 'DRAFT') {
-        return '私密';
+        return '草稿';
       }
       return '';
     }
@@ -129,7 +130,7 @@ const columns: DataTableColumn<PostDetail>[] = [
         ),
         h(
           NButton,
-          { text: true, type: 'primary', onClick: () => updatePostStatus(row.id, 'DELETE') },
+          { text: true, type: 'warning', onClick: () => updatePostStatus(row.id, PostStatus.RECYCLE) },
           { default: () => `删除` }
         ),
         h(NButton, { text: true, type: 'primary', onClick: () => `` }, { default: () => `设置` })
@@ -137,52 +138,13 @@ const columns: DataTableColumn<PostDetail>[] = [
     }
   }
 ];
+
 const recycleVisible = ref<boolean>(false);
 const publicVisible = ref<boolean>(false);
 const dataSource = ref<PostDetail[]>([]);
 const keyword = ref<string>('');
-const post = ref<PostDetail>({
-  id: '',
-  title: '',
-  status: '',
-  slug: '',
-  publicTime: 0,
-  metaKeywords: '',
-  metaDescription: '',
-  thumbnail: '',
-  summary: '',
-  password: '',
-  topPriority: 0,
-  disallowComment: 0,
-  tagIds: [],
-  categoryIds: []
-});
-const paginationReactive = ref<{
-  page: number;
-  itemCount: number;
-  pageCount: number;
-  showSizePicker: boolean;
-  pageSize: number;
-  pageSizes: number[];
-  prefix: (info: {
-    startIndex: number;
-    endIndex: number;
-    page: number;
-    pageSize: number;
-    pageCount: number;
-    itemCount: number | undefined;
-  }) => VNodeChild;
-}>({
-  page: 1,
-  pageCount: 1,
-  pageSize: 10,
-  showSizePicker: true,
-  itemCount: 0,
-  pageSizes: [5, 10, 20, 30, 40],
-  prefix: ({ itemCount }) => {
-    return `总共 ${itemCount} 条`;
-  }
-});
+const post = ref<PostDetail>(resetPost());
+const paginationReactive = ref<Pagination>(resetPagination());
 function getDataSource() {
   startLoading();
   listPostApi({
@@ -210,7 +172,13 @@ function handlePageSizeChange(pageSize: number) {
 }
 function updatePostStatus(id: string | undefined, status: string) {
   if (id) {
-    updatePostStatusApi(id, status);
+    updatePostStatusApi(id, status).then(req => {
+      if (req.error) {
+        message.error(req.error.message);
+      } else {
+        getDataSource();
+      }
+    });
   }
 }
 onMounted(() => {

@@ -76,8 +76,8 @@ export function createRequest(axiosConfig: AxiosRequestConfig, backendConfig?: S
    * @param url - 请求地址
    * @param config - axios配置
    */
-  function handleDelete<T>(url: string, config?: AxiosRequestConfig) {
-    return asyncRequest<T>({ url, method: 'delete', axiosConfig: config });
+  function handleDelete<T>(url: string, data?: any, config?: AxiosRequestConfig) {
+    return asyncRequest<T>({ url, method: 'delete', data, axiosConfig: config });
   }
   /**
    * form请求
@@ -204,8 +204,10 @@ async function getRequestResponse(
   config?: AxiosRequestConfig
 ) {
   let res: any;
-  if (method === 'get' || method === 'delete') {
+  if (method === 'get') {
     res = await instance[method](url, config);
+  } else if (method === 'delete') {
+    res = await instance[method](url, { ...config, data });
   } else {
     res = await instance[method](url, data, config);
   }

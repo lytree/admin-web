@@ -17,12 +17,14 @@ export default defineComponent({
     height: { type: Number, default: 500 },
     value: { type: String, default: '' }
   },
+
   emits: ['change', 'get', 'update:value'],
   setup(props, { attrs, emit }) {
     const wrapRef = ref<HTMLElement>();
     const vditorRef = ref<Vditor | null>();
     const initedRef = ref(false);
     const valueRef = ref(props.value || '');
+
     watch(
       [() => theme.darkMode, () => initedRef.value],
       ([val, inited]) => {
@@ -83,6 +85,7 @@ export default defineComponent({
         }
       });
     }
+
     const instance = {
       getVditor: (): Vditor => vditorRef.value!
     };

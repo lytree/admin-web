@@ -89,7 +89,8 @@
     </n-form>
     <template #action>
       <n-space justify="end"
-        ><n-button @click="createPost(1)">保存草稿</n-button> <n-button @click="createPost(2)">发布</n-button
+        ><n-button @click="createPost(PostStatus.DRAFT)">保存草稿</n-button>
+        <n-button @click="createPost(PostStatus.PUBLISHED)">发布</n-button
         ><n-button @click="dialogShow = false">关闭</n-button></n-space
       >
     </template>
@@ -97,7 +98,8 @@
 </template>
 <script lang="ts" setup>
 import { FormInst, useMessage } from 'naive-ui';
-import { type PostDetail, savePostApi } from '@/service/api/post';
+import { type PostDetail, savePostApi, PostStatus } from '@/service/api/post';
+import { resetPost } from '@/views/document/common';
 import AntDesignCloseOutlined from '~icons/ant-design/close-outlined';
 
 interface Props {
@@ -107,6 +109,7 @@ interface Props {
 }
 interface Emits {
   (e: 'update:visible', value: boolean): void;
+  (e: 'getHtml'): string;
 }
 const emit = defineEmits<Emits>();
 
@@ -136,14 +139,21 @@ function deleteMetaList(metaIndex: number) {
 }
 const { post } = toRefs(props);
 
-function createPost(_status: number) {
+function createPost(_status: PostStatus) {
   formRef.value?.validate(errors => {
     if (!errors) {
       post.value.status = _status;
-      savePostApi(post.value);
-    } else {
-      console.log(errors);
-      message.error('Invalid');
+      if (_status === PostStatus.PUBLISHED) {
+        post.value.formatContent = emit('getHtml');
+      }
+      savePostApi(post.value).then(req => {
+        if (req.error) {
+          message.error(req.error.message);
+        } else {
+          post.value = resetPost();
+          dialogShow.value = false;
+        }
+      });
     }
   });
 }
