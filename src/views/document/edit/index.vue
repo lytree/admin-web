@@ -29,6 +29,7 @@ const publicVisible = ref<boolean>(false);
 const post = ref<PostDetail>(resetPost());
 
 function getHtml(editor: Vditor) {
+  console.log(editor.getHTML());
   post.value.formatContent = editor.getHTML();
 }
 

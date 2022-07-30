@@ -53,7 +53,7 @@
             <n-date-picker
               v-model:value="post.publicTime"
               placement="bottom-start"
-              format="yyyy.MM.dd HH:mm:ss"
+              format="yyyy-MM-dd HH:mm:ss"
               placeholder="选择文章发表时间"
               type="datetime"
               clearable

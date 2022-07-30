@@ -51,7 +51,7 @@ export function deletePostByIds(ids: string[]) {
   return request.delete<void>(`/admin/posts`, ids);
 }
 export function deletePostById(id: string) {
-  return request.delete(`/admin/posts${id}`);
+  return request.delete(`/admin/posts/${id}`);
 }
 export interface PostDetail {
   id?: string;
