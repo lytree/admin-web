@@ -89,17 +89,16 @@
     </n-form>
     <template #action>
       <n-space justify="end"
-        ><n-button @click="createPost(PostStatus.DRAFT)">保存草稿</n-button>
-        <n-button @click="createPost(PostStatus.PUBLISHED)">发布</n-button
+        ><n-button @click="updatePost(PostStatus.DRAFT)">保存草稿</n-button>
+        <n-button @click="updatePost(PostStatus.PUBLISHED)">发布</n-button
         ><n-button @click="dialogShow = false">关闭</n-button></n-space
       >
     </template>
   </n-modal>
 </template>
 <script lang="ts" setup>
-import { FormInst, useMessage } from 'naive-ui';
-import { type PostDetail, savePostApi, PostStatus } from '@/service/api/post';
-import { resetPost } from '@/views/document/common';
+import { FormInst } from 'naive-ui';
+import { type PostDetail, PostStatus } from '@/service/api/post';
 import AntDesignCloseOutlined from '~icons/ant-design/close-outlined';
 
 interface Props {
@@ -109,7 +108,7 @@ interface Props {
 }
 interface Emits {
   (e: 'update:visible', value: boolean): void;
-  (e: 'getHtml'): string;
+  (e: 'createPost', value: PostStatus): string;
 }
 const emit = defineEmits<Emits>();
 
@@ -123,7 +122,6 @@ const dialogShow = computed({
   set: val => emit('update:visible', val)
 });
 
-const message = useMessage();
 const formRef = ref<FormInst | null>(null);
 
 const customMetas = ref<Array<{ key: string; value: string }>>([]);
@@ -137,25 +135,9 @@ function addMetaList() {
 function deleteMetaList(metaIndex: number) {
   customMetas.value = customMetas.value.filter((meta, index) => index !== metaIndex);
 }
-const { post } = toRefs(props);
-
-function createPost(_status: PostStatus) {
-  formRef.value?.validate(errors => {
-    if (!errors) {
-      post.value.status = _status;
-      if (_status === PostStatus.PUBLISHED) {
-        post.value.formatContent = emit('getHtml');
-      }
-      savePostApi(post.value).then(req => {
-        if (req.error) {
-          message.error(req.error.message);
-        } else {
-          post.value = resetPost();
-          dialogShow.value = false;
-        }
-      });
-    }
-  });
+function updatePost(_status: PostStatus) {
+  emit('createPost', _status);
 }
+const { post } = toRefs(props);
 </script>
 <style></style>

@@ -11,15 +11,21 @@
       </div>
       <y-markdown v-model:value="post.originalContent" @get="getHtml" />
     </n-card>
-    <publish-post-modal v-model:visible="publicVisible" title="发布文章" :post="post"></publish-post-modal>
+    <publish-post-modal
+      v-model:visible="publicVisible"
+      title="发布文章"
+      :post="post"
+      @create-post="createPost"
+    ></publish-post-modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useMessage } from 'naive-ui';
 import Vditor from 'vditor';
-import { getOneApi, PostDetail } from '@/service/api/post';
+import { getOneApi, PostDetail, PostStatus, savePostApi } from '@/service/api/post';
 import YMarkdown from '@/components/common/Markdown.vue';
 import { resetPost } from '@/views/document/common';
 import PublishPostModal from './component/PublishPostModal/index.vue';
@@ -27,22 +33,34 @@ import PublishPostModal from './component/PublishPostModal/index.vue';
 const route = useRoute();
 const publicVisible = ref<boolean>(false);
 const post = ref<PostDetail>(resetPost());
-
+const message = useMessage();
+const editorV = ref<Vditor>();
 function getHtml(editor: Vditor) {
-  console.log(editor.getHTML());
-  post.value.formatContent = editor.getHTML();
+  editorV.value = editor;
 }
 
 onMounted(async () => {
   if (route.query.postId) {
     const { data } = await getOneApi(route.query.postId as string);
     if (data) {
-      if (data.originalContent === null) {
-        data.originalContent = '';
-      }
       post.value = data;
     }
   }
 });
+function createPost(_status: PostStatus) {
+  if (editorV.value) {
+    post.value.status = _status;
+    post.value.formatContent = editorV.value.getHTML();
+    post.value.originalContent = editorV.value.getValue();
+    savePostApi(post.value).then(req => {
+      if (req.error) {
+        message.error(req.error.message);
+      } else {
+        post.value = resetPost();
+        publicVisible.value = false;
+      }
+    });
+  }
+}
 </script>
 <style scoped></style>

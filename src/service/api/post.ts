@@ -70,6 +70,6 @@ export interface PostDetail {
   categoryIds: string[];
   tags?: Tag[];
   categories?: Category[];
-  formatContent?: string;
-  originalContent?: string;
+  formatContent: string;
+  originalContent: string;
 }
