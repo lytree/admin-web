@@ -36,7 +36,7 @@ interface Props {
   multiple?: boolean;
   accepts?: string[];
   label?: string;
-  uploadHandler: Function;
+  uploadHandler: (file: any, options: any) => void;
 }
 withDefaults(defineProps<Props>(), {
   name: 'file',

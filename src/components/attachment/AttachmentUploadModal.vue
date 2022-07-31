@@ -31,7 +31,7 @@ const modelVisible = computed({
   get: () => props.visible,
   set: val => emit('update:visible', val)
 });
-function uploadHandler(file: any, options: any) {
-  return null;
-}
+const uploadHandler = (file: any, options: any) => {
+  // todo
+};
 </script>

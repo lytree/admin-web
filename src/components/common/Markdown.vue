@@ -5,17 +5,16 @@
 import { defineComponent, ref, unref, nextTick, watch, onBeforeUnmount, onDeactivated } from 'vue';
 import Vditor from 'vditor';
 import 'vditor/dist/index.css';
-import { useThemeStore } from '@/store';
 import { onMountedOrActivated } from '@/hooks/core/onMountedOrActivated';
-
-const theme = useThemeStore();
 
 export default defineComponent({
   name: 'YMarkdown',
   inheritAttrs: false,
   props: {
     height: { type: Number, default: 500 },
-    value: { type: String, default: '' }
+    value: { type: String, default: '' },
+    darkMode: { type: Boolean, default: true },
+    toolbars: { type: Array<IMenuItem>, default: () => [], require: false }
   },
 
   emits: ['change', 'get', 'update:value'],
@@ -24,9 +23,8 @@ export default defineComponent({
     const vditorRef = ref<Vditor | null>();
     const initedRef = ref(false);
     const valueRef = ref(props.value || '');
-
     watch(
-      [() => theme.darkMode, () => initedRef.value],
+      [() => props.darkMode, () => initedRef.value],
       ([val, inited]) => {
         if (!inited) {
           return;
@@ -53,13 +51,55 @@ export default defineComponent({
       if (!wrapEl) return;
       const bindValue = { ...attrs, ...props };
       const insEditor = new Vditor(wrapEl, {
-        theme: theme.darkMode === true ? 'dark' : 'classic',
+        theme: props.darkMode === true ? 'dark' : 'classic',
         lang: 'zh_CN',
         mode: 'sv',
         fullscreen: {
           index: 520
         },
+        toolbar: [
+          'emoji',
+          'headings',
+          'bold',
+          'italic',
+          'strike',
+          'link',
+          '|',
+          'list',
+          'ordered-list',
+          'check',
+          'outdent',
+          'indent',
+          '|',
+          'quote',
+          'line',
+          'code',
+          'inline-code',
+          'insert-before',
+          'insert-after',
+          'table',
+          '|',
+          'undo',
+          'redo',
+          '|',
+          'fullscreen',
+          'edit-mode',
+          ...props.toolbars,
+          {
+            name: 'more',
+            toolbar: ['both', 'code-theme', 'content-theme', 'export', 'outline', 'preview', 'devtools', 'info', 'help']
+          }
+        ],
         preview: {
+          markdown: {
+            toc: true,
+            mark: true,
+            footnotes: true,
+            autoSpace: true
+          },
+          math: {
+            engine: 'KaTeX'
+          },
           actions: []
         },
         minHeight: props.height,
