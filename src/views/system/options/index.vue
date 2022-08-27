@@ -18,6 +18,7 @@
         </n-tab-pane>
         <n-tab-pane name="comment" tab="SMTP设置"> <smtp-tab></smtp-tab></n-tab-pane>
         <n-tab-pane name="post" tab="文章设置"> <post-tab></post-tab></n-tab-pane>
+        <n-tab-pane name="attachment" tab="资源设置"> <attachment-set-tab></attachment-set-tab></n-tab-pane>
         <n-tab-pane name="other" tab="其他设置"> <other-tab></other-tab></n-tab-pane> </n-tabs
     ></n-card>
   </n-space>
@@ -29,5 +30,6 @@ import SeoTab from './components/SeoTab.vue';
 import PostTab from './components/PostTab.vue';
 import OtherTab from './components/OtherTab.vue';
 import SmtpTab from './components/SMTPTab.vue';
+import AttachmentSetTab from './components/AttachmentSetTab.vue';
 </script>
 <style scoped></style>

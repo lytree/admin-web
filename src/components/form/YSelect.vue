@@ -8,7 +8,7 @@ import { computed } from 'vue';
 interface Props {
   name: string;
   value: string;
-  desc?: string;
+  content?: string;
 }
 interface Emits {
   (e: 'update:value', val: string): void;
@@ -16,7 +16,7 @@ interface Emits {
 const props = withDefaults(defineProps<Props>(), {
   name: '',
   value: '',
-  desc: '[]'
+  content: '[]'
 });
 const emit = defineEmits<Emits>();
 
@@ -29,6 +29,6 @@ const modelValue = computed({
   }
 });
 const options = computed(() => {
-  return JSON.parse(props.desc);
+  return JSON.parse(props.content);
 });
 </script>

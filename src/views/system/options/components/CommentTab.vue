@@ -7,7 +7,7 @@
       v-model:value="item.optionValue"
       :name="item.optionName"
       path="value"
-      :desc="item.optionDesc"
+      :content="item.optionContent"
     ></component>
   </n-form>
   <n-button type="primary" block secondary strong @click="save"> 保存 </n-button>

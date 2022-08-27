@@ -23,7 +23,6 @@ const systemSetting: AuthRoute.Route = {
         order: 1
       }
     },
-
     {
       name: 'system_about',
       path: '/system/about',

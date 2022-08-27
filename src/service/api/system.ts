@@ -34,6 +34,7 @@ export interface Options {
   optionKey: string;
   optionValue: string;
   optionLevel: string;
+  optionContent?: string;
   optionDesc?: string;
   status?: number;
 }

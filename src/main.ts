@@ -10,7 +10,6 @@ async function setupApp() {
   setupAssets();
 
   const app = createApp(App);
-
   // store plugin: pinia
   setupStore(app);
 

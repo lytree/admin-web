@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { DataTableColumn, NButton, NSpace, useMessage } from 'naive-ui';
+import { NButton, NSpace, useMessage } from 'naive-ui';
 import { useLoadingEmpty } from '@/hooks';
 import { listPostApi, PostStatus, updatePostStatusApi, type PostDetail } from '@/service/api/post';
 import { resetPost, resetPagination, type Pagination } from '@/views/document/common';
@@ -63,11 +63,12 @@ import PublishPostModal from '../edit/component/PublishPostModal/index.vue';
 import { RecyclePostModal } from './component';
 import MaterialSymbolsAdd from '~icons/material-symbols/add';
 import MaterialSymbolsDelete from '~icons/material-symbols/delete';
+import { TableColumns } from 'naive-ui/es/data-table/src/interface';
 
 const { loading, startLoading, endLoading, empty, setEmpty } = useLoadingEmpty();
 const router = useRouter();
 const message = useMessage();
-const columns: DataTableColumn<PostDetail>[] = [
+const columns: TableColumns<PostDetail> = [
   {
     title: '标题',
     key: 'title',
