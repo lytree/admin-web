@@ -7,6 +7,7 @@
 			"DOM",
 			"ESNext"
 		],
+		"suppressImplicitAnyIndexErrors": true,
 		"strict": true,
 		"esModuleInterop": true,
 		"jsx": "preserve",

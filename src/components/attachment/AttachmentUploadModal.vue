@@ -40,7 +40,6 @@ import { computed } from 'vue';
 import { getToken } from '@/utils';
 import { getEnvConfig } from '~/.env-config';
 import MdiArchiveArrowDown from '~icons/mdi/archive-arrow-down';
-import { UploadFileInfo } from 'naive-ui';
 
 interface Props {
   visible: boolean;
@@ -76,12 +75,4 @@ function handleBeforeLeave() {
     onBeforeLeave.call(null);
   }
 }
-const handleFinish = ({ file, event }: { file: UploadFileInfo; event?: ProgressEvent }) => {
-  console.log(event);
-  // message.success((event?.target as XMLHttpRequest).response);
-  // const ext = file.name.split('.')[1];
-  // file.name = `更名.${ext}`;
-  // file.url = '__HTTPS__://www.mocky.io/v2/5e4bafc63100007100d8b70f';
-  // return file;
-};
 </script>

@@ -3,13 +3,13 @@
     <n-form ref="formRef" label-width="80">
       <div class="grid grid-cols-4 gap-4">
         <n-form-item label="关键词：" path="user.name">
-          <n-input />
+          <n-input clearable />
         </n-form-item>
         <n-form-item label="存储位置：" path="user.age">
-          <n-select />
+          <n-select clearable :options="saveType" label-field="text" value-field="type" />
         </n-form-item>
         <n-form-item label="文件类型：" path="phone">
-          <n-select />
+          <n-select clearable :options="mediaType" />
         </n-form-item>
         <n-form-item>
           <n-button attr-type="button"> 查询 </n-button>
@@ -20,20 +20,19 @@
     <div class="mb-0">
       <n-button attr-type="button" @click="uploadVisible = true"> 上传 </n-button>
     </div>
-    <n-divider />
-    <n-list bordered
-      ><div class="grid grid-cols-6 content-start">
-        <n-list-item v-for="(item, index) in attachmentsList" :key="index" @click="handleItemClick(index)">
-          <div
-            :class="`${isItemSelect(item) ? 'border-blue-600' : 'border-slate-200'}`"
-            class="border block bg-no-repeat bg-cover bg-center"
-          >
-            <span v-if="!isImage(item)">{{ item.name }}</span>
-            <n-image v-else :src="item.url" preview-disabled object-fit="contain" />
-          </div>
-        </n-list-item>
-      </div>
-    </n-list>
+    <n-divider /><n-image-group>
+      <n-list bordered
+        ><div class="grid grid-cols-6 content-start">
+          <n-list-item v-for="(item, index) in attachmentsList" :key="index" @click="handleItemClick(index)">
+            <div
+              class="border block bg-no-repeat bg-cover bg-center relative cursor-pointer overflow-hidden rounded-sm border-solid bg-white transition-all hover:shadow-sm"
+            >
+              <span v-if="!isImage(item)">{{ item.name }}</span>
+              <n-image preview-disabled v-else class="block" :src="item.url" object-fit="fill" />
+            </div>
+          </n-list-item>
+        </div> </n-list
+    ></n-image-group>
     <template #footer>
       <n-space justify="end">
         <n-pagination
@@ -67,24 +66,29 @@
               value: 36
             }
           ]"
-          @update-page="updateAttachmentsList"
-          @page-size-change="updateAttachmentsList"
+          @update-page="updateAttachmentsList(null)"
+          @update:page-size="updateAttachmentsList(1)"
         /> </n-space></template
     ><attachment-upload-modal v-model:visible="uploadVisible" @before-leave="updateAttachmentsList" />
   </n-card>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
-import { listAttachmentsApi, type AttachmentsDetail } from '@/service/api/attachments';
+import {
+  AttachmentType,
+  listAttachmentsApi,
+  listMediaTypes,
+  listTypes,
+  type AttachmentsDetail
+} from '@/service/api/attachments';
 import { Pagination, resetPagination } from '@/views/document/common';
 const paginationReactive = ref<Pagination>(resetPagination());
 const uploadVisible = ref<boolean>(false);
 const attachmentsList = ref<AttachmentsDetail[]>([]);
+const saveType = ref<Array<{ type: string; text: string }>>([]);
+const mediaType = ref<Array<{ value: string; label: string }>>([]);
 function handleItemClick(attachment: any) {
   console.log(attachment);
-}
-function isItemSelect(attachment: AttachmentsDetail) {
-  return attachmentsList.value.findIndex(item => item.id === attachment.id) > -1;
 }
 
 function isImage(attachment: any) {
@@ -93,7 +97,10 @@ function isImage(attachment: any) {
   }
   return attachment.mediaType.startsWith('image');
 }
-function updateAttachmentsList() {
+function updateAttachmentsList(page: null | number) {
+  if (page) {
+    paginationReactive.value.page = page;
+  }
   listAttachmentsApi({ page: paginationReactive.value.page - 1, size: paginationReactive.value.pageSize }).then(res => {
     if (res.data) {
       attachmentsList.value = res.data.content;
@@ -101,6 +108,27 @@ function updateAttachmentsList() {
       paginationReactive.value.pageCount = res.data.pages;
       paginationReactive.value.itemCount = res.data.total;
       paginationReactive.value.pageSize = res.data.rpp;
+    }
+  });
+}
+function getListTypes() {
+  listTypes().then(req => {
+    if (req.data) {
+      req.data.forEach((value, _index) => {
+        saveType.value.push(AttachmentType[value]);
+      });
+    }
+  });
+}
+function getListMediaTypes() {
+  listMediaTypes().then(req => {
+    if (req.data) {
+      req.data.forEach((value, _index) => {
+        mediaType.value.push({
+          label: value,
+          value: value
+        });
+      });
     }
   });
 }
@@ -112,6 +140,8 @@ onMounted(async () => {
     paginationReactive.value.pageCount = data.pages;
     paginationReactive.value.itemCount = data.total;
     paginationReactive.value.pageSize = data.rpp;
+    getListMediaTypes();
+    getListTypes();
   }
 });
 </script>
