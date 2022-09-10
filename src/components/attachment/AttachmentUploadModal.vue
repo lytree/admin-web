@@ -72,7 +72,7 @@ const url = computed(() => {
 function handleBeforeLeave() {
   const onBeforeLeave = props.onBeforeLeave;
   if (onBeforeLeave) {
-    onBeforeLeave.call(null);
+    onBeforeLeave.call(null, null);
   }
 }
 </script>

@@ -54,7 +54,7 @@
 		"@amap/amap-jsapi-types": "^0.0.8",
 		"@commitlint/cli": "^17.1.2",
 		"@commitlint/config-conventional": "^17.1.0",
-		"@iconify/json": "^2.1.104",
+		"@iconify/json": "^2.1.105",
 		"@iconify/vue": "^3.2.1",
 		"@types/bmapgl": "^0.0.5",
 		"@types/crypto-js": "^4.1.1",
@@ -96,7 +96,7 @@
 		"vite-plugin-compression": "^0.5.1",
 		"vite-plugin-html": "^3.2.0",
 		"vite-plugin-mock": "^2.9.6",
-		"vue-eslint-parser": "^9.0.3",
+		"vue-eslint-parser": "^9.1.0",
 		"vue-tsc": "^0.40.13"
 	}
 }

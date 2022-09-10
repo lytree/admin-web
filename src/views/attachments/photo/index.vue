@@ -20,19 +20,46 @@
     <div class="mb-0">
       <n-button attr-type="button" @click="uploadVisible = true"> 上传 </n-button>
     </div>
-    <n-divider /><n-image-group>
-      <n-list bordered
-        ><div class="grid grid-cols-6 content-start">
-          <n-list-item v-for="(item, index) in attachmentsList" :key="index" @click="handleItemClick(index)">
-            <div
-              class="border block bg-no-repeat bg-cover bg-center relative cursor-pointer overflow-hidden rounded-sm border-solid bg-white transition-all hover:shadow-sm"
+    <n-divider />
+    <n-list bordered
+      ><div class="grid grid-cols-6 content-start">
+        <n-list-item
+          v-for="(item, index) in attachmentsList"
+          :key="index"
+          @mouseenter="modifyHover(item, 'hover', true)"
+          @mouseleave="modifyHover(item, 'hover', false)"
+          @click="handleItemClick(item)"
+        >
+          <div
+            class="max-h-[240px] max-w-[240px] border-none block bg-no-repeat bg-cover bg-center relative cursor-pointer overflow-hidden rounded-sm border-solid bg-white transition-all hover:shadow-sm"
+          >
+            <span v-if="!isImage(item)">{{ item.name }}</span>
+            <n-image preview-disabled v-else class="block" :src="item.thumbnail" object-fit="fill" lazy
+              ><template #placeholder>
+                <div
+                  style="
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #0001;
+                  "
+                >
+                  Loading
+                </div>
+              </template></n-image
             >
-              <span v-if="!isImage(item)">{{ item.name }}</span>
-              <n-image preview-disabled v-else class="block" :src="item.url" object-fit="fill" />
-            </div>
-          </n-list-item>
-        </div> </n-list
-    ></n-image-group>
+            <ant-design-profile-twotone
+              v-show="item.hover"
+              class="absolute top-1 right-1 cursor-pointer font-bold transition-all"
+              :style="{ fontSize: '20px' }"
+              @click.stop="handleOpenDetail(item)"
+            ></ant-design-profile-twotone>
+          </div>
+        </n-list-item>
+      </div>
+    </n-list>
     <template #footer>
       <n-space justify="end">
         <n-pagination
@@ -66,10 +93,13 @@
               value: 36
             }
           ]"
-          @update-page="updateAttachmentsList(null)"
-          @update:page-size="updateAttachmentsList(1)"
+          @update-page="updatePage"
+          @update:page-size="updatePageSize"
         /> </n-space></template
-    ><attachment-upload-modal v-model:visible="uploadVisible" @before-leave="updateAttachmentsList" />
+    ><attachment-upload-modal
+      v-model:visible="uploadVisible"
+      @before-leave="updateAttachmentsList"
+    /><attachment-detail-modal v-model:visible="detailVsiible" :attachment="current" />
   </n-card>
 </template>
 <script setup lang="ts">
@@ -82,25 +112,55 @@ import {
   type AttachmentsDetail
 } from '@/service/api/attachments';
 import { Pagination, resetPagination } from '@/views/document/common';
+import AntDesignProfileTwotone from '~icons/ant-design/profile-twotone';
 const paginationReactive = ref<Pagination>(resetPagination());
 const uploadVisible = ref<boolean>(false);
 const attachmentsList = ref<AttachmentsDetail[]>([]);
 const saveType = ref<Array<{ type: string; text: string }>>([]);
 const mediaType = ref<Array<{ value: string; label: string }>>([]);
-function handleItemClick(attachment: any) {
-  console.log(attachment);
+const selected = ref<AttachmentsDetail[]>([]);
+const current = ref<AttachmentsDetail | null>(null);
+const detailVsiible = ref<boolean>(false);
+function handleItemClick(attachment: AttachmentsDetail) {
+  const isSelect = selected.value.findIndex(item => item.id === attachment.id) > -1;
+  isSelect ? handleUnselect(attachment) : handleSelect(attachment);
+}
+function handleSelect(attachment: AttachmentsDetail) {
+  selected.value = [...selected.value, attachment];
 }
 
-function isImage(attachment: any) {
+function handleUnselect(attachment: AttachmentsDetail) {
+  selected.value = selected.value.filter(item => item.id !== attachment.id);
+}
+function handleOpenDetail(attachment: AttachmentsDetail) {
+  current.value = attachment;
+  detailVsiible.value = true;
+}
+function isImage(attachment: AttachmentsDetail) {
   if (!attachment || !attachment.mediaType) {
     return false;
   }
   return attachment.mediaType.startsWith('image');
 }
-function updateAttachmentsList(page: null | number) {
+function modifyHover(item: any, field: string, value: any) {
+  item[field] = value;
+}
+function updatePageSize(pageSize: number) {
+  updateAttachmentsList(1, pageSize);
+}
+function updatePage(page: number) {
+  updateAttachmentsList(1, null);
+}
+function updateAttachmentsList(page: null | number, pageSize: number | null) {
   if (page) {
     paginationReactive.value.page = page;
+  } else {
+    paginationReactive.value.page = 1;
   }
+  if (pageSize) {
+    paginationReactive.value.pageSize = pageSize;
+  }
+
   listAttachmentsApi({ page: paginationReactive.value.page - 1, size: paginationReactive.value.pageSize }).then(res => {
     if (res.data) {
       attachmentsList.value = res.data.content;

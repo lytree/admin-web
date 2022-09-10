@@ -1,205 +1,152 @@
 <template>
-  <n-card>
-    <n-modal v-model:show="dialogShow" :bordered="false" preset="card" class="w-[1024px]" :mask-closable="true">
+  <n-modal
+    v-model:show="dialogShow"
+    :bordered="false"
+    preset="card"
+    class="w-[1024px]"
+    title="选择附件"
+    :mask-closable="true"
+    @after-enter="init"
+  >
+    <n-card>
       <n-form ref="formRef" label-width="80">
         <div class="grid grid-cols-4 gap-4">
-          <n-form-item label="关键词：" path="user.name">
-            <n-input />
-          </n-form-item>
-          <n-form-item label="存储位置：" path="user.age">
-            <n-select />
-          </n-form-item>
-          <n-form-item label="文件类型：" path="phone">
-            <n-select />
-          </n-form-item>
-          <n-form-item>
-            <n-button attr-type="button"> 查询 </n-button>
-            <n-button attr-type="button"> 重置 </n-button>
-          </n-form-item>
+          <NFormItem label="关键词：" path="user.name">
+            <NInput clearable />
+          </NFormItem>
+          <NFormItem label="存储位置：" path="user.age">
+            <NSelect clearable :options="saveType" label-field="text" value-field="type" />
+          </NFormItem>
+          <NFormItem label="文件类型：" path="phone">
+            <NSelect clearable :options="mediaType" />
+          </NFormItem>
+          <NFormItem>
+            <NButton attr-type="button"> 查询 </NButton>
+            <NButton attr-type="button"> 重置 </NButton>
+          </NFormItem>
         </div>
       </n-form>
       <div class="mb-0">
-        <n-button attr-type="button" @click="uploadVisible = true"> 上传 </n-button>
+        <NButton attr-type="button" @click="uploadVisible = true"> 上传 </NButton>
       </div>
       <n-divider />
       <n-list bordered
         ><div class="grid grid-cols-6 content-start">
-          <n-list-item v-for="(item, index) in list" :key="index" @click="handleItemClick(index)">
+          <n-list-item
+            v-for="(item, index) in attachmentsList"
+            :key="index"
+            @mouseenter="modifyHover(item, 'hover', true)"
+            @mouseleave="modifyHover(item, 'hover', false)"
+            @click="handleItemClick(item)"
+          >
             <div
-              :class="`${isItemSelect(item) ? 'border-blue-600' : 'border-slate-200'}`"
-              class="border block bg-no-repeat bg-cover bg-center"
+              class="max-h-[240px] max-w-[240px] border-none block bg-no-repeat bg-cover bg-center relative cursor-pointer overflow-hidden rounded-sm border-solid bg-white transition-all hover:shadow-sm"
             >
-              <span v-if="!isImage(item)">{{ item.suffix }}</span>
-              <n-image v-else :src="item.path" preview-disabled object-fit="contain" /></div
-          ></n-list-item></div
-      ></n-list>
-    </n-modal>
-    <attachment-upload-modal v-model:visible="uploadVisible" />
-  </n-card>
+              <span v-if="!isImage(item)">{{ item.name }}</span>
+              <n-image preview-disabled v-else class="block" :src="item.thumbnail" object-fit="fill"
+                ><template #placeholder>
+                  <div
+                    style="
+                      width: 100%;
+                      height: 100%;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      background-color: #0001;
+                    "
+                  >
+                    Loading
+                  </div>
+                </template></n-image
+              >
+              <ant-design-check-circle-outlined
+                v-show="isItemSelect(item) && !item.hover"
+                class="absolute top-1 right-1 cursor-pointer font-bold transition-all"
+                :style="{ fontSize: '20px', color: 'rgb(37 99 235)' }"
+              ></ant-design-check-circle-outlined>
+              <ant-design-profile-twotone
+                v-show="item.hover"
+                class="absolute top-1 right-1 cursor-pointer font-bold transition-all"
+                :style="{ fontSize: '20px' }"
+                @click.stop="handleOpenDetail(item)"
+              ></ant-design-profile-twotone>
+            </div>
+          </n-list-item>
+        </div>
+      </n-list>
+      <template #footer>
+        <n-space justify="end">
+          <n-pagination
+            v-model:page="paginationReactive.page"
+            v-model:page-size="paginationReactive.pageSize"
+            :page-count="paginationReactive.pageCount"
+            show-size-picker
+            :page-sizes="[
+              {
+                label: '6 条/每页',
+                value: 6
+              },
+              {
+                label: '12 条/每页',
+                value: 12
+              },
+              {
+                label: '18 条/每页',
+                value: 18
+              },
+              {
+                label: '24 条/每页',
+                value: 24
+              },
+              {
+                label: '30 条/每页',
+                value: 30
+              },
+              {
+                label: '36 条/每页',
+                value: 36
+              }
+            ]"
+            @update-page="updatePage"
+            @update:page-size="updatePageSize"
+          /> </n-space
+      ></template>
+    </n-card>
+    <template #footer
+      ><n-space justify="end"> <NButton>确认</NButton><NButton>取消</NButton></n-space></template
+    ><attachment-upload-modal v-model:visible="uploadVisible" @before-leave="updateAttachmentsList" />
+    <attachment-detail-modal v-model:visible="detailVsiible" :attachment="current" />
+  </n-modal>
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import {
+  AttachmentType,
+  listAttachmentsApi,
+  listMediaTypes,
+  listTypes,
+  type AttachmentsDetail
+} from '@/service/api/attachments';
+import { Pagination, resetPagination } from '@/views/document/common';
+import AntDesignProfileTwotone from '~icons/ant-design/profile-twotone';
+import AntDesignCheckCircleOutlined from '~icons/ant-design/check-circle-outlined';
+const paginationReactive = ref<Pagination>(resetPagination());
+const uploadVisible = ref<boolean>(false);
+const attachmentsList = ref<AttachmentsDetail[]>([]);
+const saveType = ref<Array<{ type: string; text: string }>>([]);
+const mediaType = ref<Array<{ value: string; label: string }>>([]);
+const selected = ref<AttachmentsDetail[]>([]);
+const current = ref<AttachmentsDetail | null>(null);
+const detailVsiible = ref<boolean>(false);
+const dialogShow = computed({
+  get: () => props.visible,
+  set: val => emit('update:visible', val)
+});
 
-const list = [
-  {
-    id: 14,
-    name: 'Wordmark',
-    path: 'https://demo.halo.run/upload/2022/02/Wordmark-889c195cc43a4c0088eb79447192b90f.png',
-    fileKey: 'upload/2022/02/Wordmark-889c195cc43a4c0088eb79447192b90f.png',
-    thumbPath: '/upload/2022/02/Wordmark-889c195cc43a4c0088eb79447192b90f-thumbnail.png',
-    mediaType: 'image/png',
-    suffix: 'png',
-    width: 1200,
-    height: 600,
-    size: 91779,
-    type: 'LOCAL',
-    createTime: 1644555116916
-  },
-  {
-    id: 13,
-    name: 'unsplash00011',
-    path: 'https://demo.halo.run/upload/2022/02/unsplash00011-334c04ab00f24a399d6bf974475cc941.jpg',
-    fileKey: 'upload/2022/02/unsplash00011-334c04ab00f24a399d6bf974475cc941.jpg',
-    thumbPath: '/upload/2022/02/unsplash00011-334c04ab00f24a399d6bf974475cc941-thumbnail.jpg',
-    mediaType: 'image/jpeg',
-    suffix: 'jpg',
-    width: 6016,
-    height: 4016,
-    size: 476059,
-    type: 'LOCAL',
-    createTime: 1644554964628
-  },
-  {
-    id: 12,
-    name: 'unsplash00010',
-    path: 'https://demo.halo.run/upload/2022/02/unsplash00010-eade87cd8a84420fb0e5ddd2983c86b4.jpg',
-    fileKey: 'upload/2022/02/unsplash00010-eade87cd8a84420fb0e5ddd2983c86b4.jpg',
-    thumbPath: '/upload/2022/02/unsplash00010-eade87cd8a84420fb0e5ddd2983c86b4-thumbnail.jpg',
-    mediaType: 'image/jpeg',
-    suffix: 'jpg',
-    width: 4633,
-    height: 3500,
-    size: 530708,
-    type: 'LOCAL',
-    createTime: 1644554861799
-  },
-  {
-    id: 11,
-    name: 'unsplash00008',
-    path: 'https://demo.halo.run/upload/2022/02/unsplash00008-df3c45adc66045d0874df6fe668a86e7.jpg',
-    fileKey: 'upload/2022/02/unsplash00008-df3c45adc66045d0874df6fe668a86e7.jpg',
-    thumbPath: '/upload/2022/02/unsplash00008-df3c45adc66045d0874df6fe668a86e7-thumbnail.jpg',
-    mediaType: 'image/jpeg',
-    suffix: 'jpg',
-    width: 5391,
-    height: 3594,
-    size: 225127,
-    type: 'LOCAL',
-    createTime: 1644554859550
-  },
-  {
-    id: 10,
-    name: 'unsplash00007',
-    path: 'https://demo.halo.run/upload/2022/02/unsplash00007-e2bd7f562c774a45bf1d3cba9eba35cc.jpg',
-    fileKey: 'upload/2022/02/unsplash00007-e2bd7f562c774a45bf1d3cba9eba35cc.jpg',
-    thumbPath: '/upload/2022/02/unsplash00007-e2bd7f562c774a45bf1d3cba9eba35cc-thumbnail.jpg',
-    mediaType: 'image/jpeg',
-    suffix: 'jpg',
-    width: 5184,
-    height: 3456,
-    size: 267917,
-    type: 'LOCAL',
-    createTime: 1644554859474
-  },
-  {
-    id: 9,
-    name: 'unsplash00009',
-    path: 'https://demo.halo.run/upload/2022/02/unsplash00009-8efea311bc3246e6bfcb23513264e88e.jpg',
-    fileKey: 'upload/2022/02/unsplash00009-8efea311bc3246e6bfcb23513264e88e.jpg',
-    thumbPath: '/upload/2022/02/unsplash00009-8efea311bc3246e6bfcb23513264e88e-thumbnail.jpg',
-    mediaType: 'image/jpeg',
-    suffix: 'jpg',
-    width: 4000,
-    height: 3000,
-    size: 238188,
-    type: 'LOCAL',
-    createTime: 1644554859030
-  },
-  {
-    id: 8,
-    name: 'unsplash00005',
-    path: 'https://demo.halo.run/upload/2022/02/unsplash00005-a50f6597790d4e239d77d64595eea027.jpg',
-    fileKey: 'upload/2022/02/unsplash00005-a50f6597790d4e239d77d64595eea027.jpg',
-    thumbPath: '/upload/2022/02/unsplash00005-a50f6597790d4e239d77d64595eea027-thumbnail.jpg',
-    mediaType: 'image/jpeg',
-    suffix: 'jpg',
-    width: 5184,
-    height: 3888,
-    size: 182861,
-    type: 'LOCAL',
-    createTime: 1644554857259
-  },
-  {
-    id: 7,
-    name: 'unsplash00004',
-    path: 'https://demo.halo.run/upload/2022/02/unsplash00004-7970e58c03984f6ba0ed9a27617e45ac.jpg',
-    fileKey: 'upload/2022/02/unsplash00004-7970e58c03984f6ba0ed9a27617e45ac.jpg',
-    thumbPath: '/upload/2022/02/unsplash00004-7970e58c03984f6ba0ed9a27617e45ac-thumbnail.jpg',
-    mediaType: 'image/jpeg',
-    suffix: 'jpg',
-    width: 5184,
-    height: 3888,
-    size: 393523,
-    type: 'LOCAL',
-    createTime: 1644554857152
-  },
-  {
-    id: 6,
-    name: 'unsplash00006',
-    path: 'https://demo.halo.run/upload/2022/02/unsplash00006-55c1cd41aa3a41a6a6c7e2f695329dd5.png',
-    fileKey: 'upload/2022/02/unsplash00006-55c1cd41aa3a41a6a6c7e2f695329dd5.png',
-    thumbPath: '/upload/2022/02/unsplash00006-55c1cd41aa3a41a6a6c7e2f695329dd5-thumbnail.png',
-    mediaType: 'image/png',
-    suffix: 'png',
-    width: 2560,
-    height: 1600,
-    size: 678828,
-    type: 'LOCAL',
-    createTime: 1644554856219
-  },
-  {
-    id: 5,
-    name: 'unsplash00003',
-    path: 'https://demo.halo.run/upload/2022/02/unsplash00003-e08bc8eb2c054c6296d715a34e382d10.jpg',
-    fileKey: 'upload/2022/02/unsplash00003-e08bc8eb2c054c6296d715a34e382d10.jpg',
-    thumbPath: '/upload/2022/02/unsplash00003-e08bc8eb2c054c6296d715a34e382d10-thumbnail.jpg',
-    mediaType: 'image/jpeg',
-    suffix: 'jpg',
-    width: 6000,
-    height: 4000,
-    size: 1128400,
-    type: 'LOCAL',
-    createTime: 1644554855140
-  },
-  {
-    id: 4,
-    name: 'unsplash00002',
-    path: 'https://demo.halo.run/upload/2022/02/unsplash00002-b87452bc7f83426799c2a637c5f5a267.jpg',
-    fileKey: 'upload/2022/02/unsplash00002-b87452bc7f83426799c2a637c5f5a267.jpg',
-    thumbPath: '/upload/2022/02/unsplash00002-b87452bc7f83426799c2a637c5f5a267-thumbnail.jpg',
-    mediaType: 'image/jpeg',
-    suffix: 'jpg',
-    width: 5472,
-    height: 3648,
-    size: 240923,
-    type: 'LOCAL',
-    createTime: 1644554854960
-  }
-];
 interface Props {
   visible: boolean;
   title?: string;
-  multiSelect: boolean;
+  multiSelect?: boolean;
 }
 
 interface Emits {
@@ -213,22 +160,104 @@ const props = withDefaults(defineProps<Props>(), {
   multiSelect: false
 });
 
-const uploadVisible = ref<boolean>(false);
-const dialogShow = computed({
-  get: () => props.visible,
-  set: val => emit('update:visible', val)
-});
-function handleItemClick(attachment: any) {
-  console.log(attachment);
+function handleItemClick(attachment: AttachmentsDetail) {
+  const isSelect = selected.value.findIndex(item => item.id === attachment.id) > -1;
+  isSelect ? handleUnselect(attachment) : handleSelect(attachment);
 }
-function isItemSelect(attachment: any) {
-  return list.findIndex(item => item.id === attachment.id) > -1;
+function handleSelect(attachment: AttachmentsDetail) {
+  selected.value = [...selected.value, attachment];
 }
 
-function isImage(attachment: any) {
+function handleUnselect(attachment: AttachmentsDetail) {
+  selected.value = selected.value.filter(item => item.id !== attachment.id);
+}
+function isItemSelect(attachment: AttachmentsDetail) {
+  return selected.value.findIndex(item => item.id === attachment.id) > -1;
+}
+function handleOpenDetail(attachment: AttachmentsDetail) {
+  current.value = attachment;
+  detailVsiible.value = true;
+}
+function isImage(attachment: AttachmentsDetail) {
   if (!attachment || !attachment.mediaType) {
     return false;
   }
   return attachment.mediaType.startsWith('image');
 }
+function modifyHover(item: any, field: string, value: any) {
+  item[field] = value;
+}
+function updatePageSize(pageSize: number) {
+  updateAttachmentsList(1, pageSize);
+}
+function updatePage(page: number) {
+  updateAttachmentsList(1, null);
+}
+function updateAttachmentsList(page: null | number, pageSize: number | null) {
+  if (page) {
+    paginationReactive.value.page = page;
+  } else {
+    paginationReactive.value.page = 1;
+  }
+  if (pageSize) {
+    paginationReactive.value.pageSize = pageSize;
+  }
+
+  listAttachmentsApi({ page: paginationReactive.value.page - 1, size: paginationReactive.value.pageSize }).then(res => {
+    if (res.data) {
+      attachmentsList.value = res.data.content;
+      paginationReactive.value.page = res.data.page + 1;
+      paginationReactive.value.pageCount = res.data.pages;
+      paginationReactive.value.itemCount = res.data.total;
+      paginationReactive.value.pageSize = res.data.rpp;
+    }
+  });
+}
+function getListTypes() {
+  listTypes().then(req => {
+    if (req.data) {
+      req.data.forEach((value, _index) => {
+        saveType.value.push(AttachmentType[value]);
+      });
+    }
+  });
+}
+function getListMediaTypes() {
+  listMediaTypes().then(req => {
+    if (req.data) {
+      req.data.forEach((value, _index) => {
+        mediaType.value.push({
+          label: value,
+          value: value
+        });
+      });
+    }
+  });
+}
+function init() {
+  listAttachmentsApi({ page: 0, size: 12 }).then(res => {
+    if (res.data) {
+      attachmentsList.value = res.data.content;
+      paginationReactive.value.page = res.data.page + 1;
+      paginationReactive.value.pageCount = res.data.pages;
+      paginationReactive.value.itemCount = res.data.total;
+      paginationReactive.value.pageSize = res.data.rpp;
+      getListMediaTypes();
+      getListTypes();
+    }
+  });
+}
+
+// onMounted(async () => {
+//   const { data } = await listAttachmentsApi({ page: 0, size: 12 });
+//   if (data) {
+//     attachmentsList.value = data.content;
+//     paginationReactive.value.page = data.page + 1;
+//     paginationReactive.value.pageCount = data.pages;
+//     paginationReactive.value.itemCount = data.total;
+//     paginationReactive.value.pageSize = data.rpp;
+//     getListMediaTypes();
+//     getListTypes();
+//   }
+// });
 </script>
