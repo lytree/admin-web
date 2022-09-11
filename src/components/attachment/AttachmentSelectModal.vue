@@ -7,6 +7,7 @@
     title="选择附件"
     :mask-closable="true"
     @after-enter="init"
+    @after-leave="setEmpty"
   >
     <n-card>
       <n-form ref="formRef" label-width="80">
@@ -27,7 +28,7 @@
         </div>
       </n-form>
       <div class="mb-0">
-        <NButton attr-type="button" @click="uploadVisible = true"> 上传 </NButton>
+        <n-button attr-type="button" @click="uploadVisible = true"> 上传 </n-button>
       </div>
       <n-divider />
       <n-list bordered
@@ -113,7 +114,9 @@
       ></template>
     </n-card>
     <template #footer
-      ><n-space justify="end"> <NButton>确认</NButton><NButton>取消</NButton></n-space></template
+      ><n-space justify="end">
+        <n-button @click="dealSelected">确认</n-button><n-button @click="setEmpty">取消</n-button></n-space
+      ></template
     ><attachment-upload-modal v-model:visible="uploadVisible" @before-leave="updateAttachmentsList" />
     <attachment-detail-modal v-model:visible="detailVsiible" :attachment="current" />
   </n-modal>
@@ -147,6 +150,7 @@ interface Props {
   visible: boolean;
   title?: string;
   multiSelect?: boolean;
+  onSaveAfter?: Function;
 }
 
 interface Emits {
@@ -157,7 +161,7 @@ const emit = defineEmits<Emits>();
 const props = withDefaults(defineProps<Props>(), {
   visible: false,
   title: '选择附件',
-  multiSelect: false
+  multiSelect: true
 });
 
 function handleItemClick(attachment: AttachmentsDetail) {
@@ -191,7 +195,13 @@ function updatePageSize(pageSize: number) {
   updateAttachmentsList(1, pageSize);
 }
 function updatePage(page: number) {
-  updateAttachmentsList(1, null);
+  updateAttachmentsList(page, null);
+}
+function dealSelected() {
+  const onSaveAfter = props.onSaveAfter;
+  if (onSaveAfter) {
+    onSaveAfter.call(onSaveAfter, selected.value);
+  }
 }
 function updateAttachmentsList(page: null | number, pageSize: number | null) {
   if (page) {
@@ -210,6 +220,8 @@ function updateAttachmentsList(page: null | number, pageSize: number | null) {
       paginationReactive.value.pageCount = res.data.pages;
       paginationReactive.value.itemCount = res.data.total;
       paginationReactive.value.pageSize = res.data.rpp;
+      getListMediaTypes();
+      getListTypes();
     }
   });
 }
@@ -247,7 +259,10 @@ function init() {
     }
   });
 }
-
+function setEmpty() {
+  selected.value = [];
+  current.value = null;
+}
 // onMounted(async () => {
 //   const { data } = await listAttachmentsApi({ page: 0, size: 12 });
 //   if (data) {

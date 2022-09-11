@@ -22,7 +22,7 @@
       :post="post"
       @create-post="createPost"
     ></publish-post-modal
-    ><attachment-select-modal v-model:visible="attachmentVisible"></attachment-select-modal>
+    ><attachment-select-modal v-model:visible="attachmentVisible" @save-after="insertImg"></attachment-select-modal>
   </div>
 </template>
 
@@ -37,6 +37,7 @@ import { getOneApi, PostDetail, PostStatus, savePostApi } from '@/service/api/po
 import YMarkdown from '@/components/common/Markdown.vue';
 import { resetPost } from '@/views/document/common';
 import PublishPostModal from './component/PublishPostModal/index.vue';
+import { AttachmentsDetail } from '@/service/api/attachments';
 
 const theme = useThemeStore();
 const route = useRoute();
@@ -73,16 +74,6 @@ function createPost(_status: PostStatus) {
     });
   }
 }
-const getElement = (vditor: IVditor) => {
-  switch (vditor.currentMode) {
-    case 'ir':
-      return vditor.ir?.element;
-    case 'wysiwyg':
-      return vditor.wysiwyg?.element;
-    case 'sv':
-      return vditor.sv?.element;
-  }
-};
 
 const toolbars: IMenuItem[] = [
   {
@@ -91,54 +82,39 @@ const toolbars: IMenuItem[] = [
     tip: '选择图片',
     className: 'vditor-toolbar__item',
     icon: '<svg><use xlink:href="#vditor-icon-upload"></use></svg>',
-    click: (event: Event, vditor: IVditor) => (attachmentVisible.value = true)
-
-    //       let succFileText = '';
-    //       Object.keys(response.data.succMap).forEach(key => {
-    //         const path = response.data.succMap[key];
-    //         const lastIndex = key.lastIndexOf('.');
-    //         let type = key.substr(lastIndex);
-    //         const filename = vditor.options.upload.filename(key.substr(0, lastIndex)) + type;
-    //         type = type.toLowerCase();
-    //         if (type.indexOf('.wav') === 0 || type.indexOf('.mp3') === 0 || type.indexOf('.ogg') === 0) {
-    //           if (vditor.currentMode === 'wysiwyg') {
-    //             succFileText += `<div class="vditor-wysiwyg__block" data-type="html-block"
-    //  data-block="0"><pre><code>&lt;audio controls="controls" src="${path}"&gt;&lt;/audio&gt;</code></pre><pre class="vditor-wysiwyg__preview" data-render="1"><audio controls="controls" src="${path}"></audio></pre></div>\n`;
-    //           } else if (vditor.currentMode === 'ir') {
-    //             succFileText += `<audio controls="controls" src="${path}"></audio>\n`;
-    //           } else {
-    //             succFileText += `[${filename}](${path})\n`;
-    //           }
-    //         } else if (
-    //           type.indexOf('.apng') === 0 ||
-    //           type.indexOf('.bmp') === 0 ||
-    //           type.indexOf('.gif') === 0 ||
-    //           type.indexOf('.ico') === 0 ||
-    //           type.indexOf('.cur') === 0 ||
-    //           type.indexOf('.jpg') === 0 ||
-    //           type.indexOf('.jpeg') === 0 ||
-    //           type.indexOf('.jfif') === 0 ||
-    //           type.indexOf('.pjp') === 0 ||
-    //           type.indexOf('.pjpeg') === 0 ||
-    //           type.indexOf('.png') === 0 ||
-    //           type.indexOf('.svg') === 0 ||
-    //           type.indexOf('.webp') === 0
-    //         ) {
-    //           if (vditor.currentMode === 'wysiwyg') {
-    //             succFileText += `<img alt="${filename}" src="${path}">\n`;
-    //           } else {
-    //             succFileText += `![${filename}](${path})\n`;
-    //           }
-    //         } else if (vditor.currentMode === 'wysiwyg') {
-    //           succFileText += `<a href="${path}">${filename}</a>\n`;
-    //         } else {
-    //           succFileText += `[${filename}](${path})\n`;
-    //         }
-    //       });
-    //       setSelectionFocus(vditor.upload.range);
-    //       document.execCommand('insertHTML', false, succFileText);
-    //       vditor.upload.range = getSelection().getRangeAt(0).cloneRange();
+    click: (_event: Event, _vditor: IVditor) => (attachmentVisible.value = true)
   }
 ];
+
+function insertImg(selected: AttachmentsDetail[]) {
+  console.log(selected);
+  if (selected && selected.length > 0 && editorV.value) {
+    let succFileText = '';
+    const vditor = editorV.value;
+    selected.forEach((attachment, _index) => {
+      const type = attachment.mediaType;
+      if ('audio/*' === type || 'audio/ogg' === type) {
+        if (vditor.getCurrentMode() === 'wysiwyg') {
+          succFileText += `<div class="vditor-wysiwyg__block" data-type="html-block"
+     data-block="0"><pre><code>&lt;audio controls="controls" src="${attachment.url}"&gt;&lt;/audio&gt;</code></pre><pre class="vditor-wysiwyg__preview" data-render="1"><audio controls="controls" src="${attachment.url}"></audio></pre></div>\n`;
+        } else if (vditor.getCurrentMode() === 'ir') {
+          succFileText += `<audio controls="controls" src="${attachment.url}"></audio>\n`;
+        } else {
+          succFileText += `[${attachment.name}](${attachment.url})\n`;
+        }
+      } else if ('image/png' === type || 'image/jpeg' === type || 'image/webp' === type) {
+        if (vditor.getCurrentMode() === 'wysiwyg') {
+          succFileText += `<img alt="${attachment.name}" src="${attachment.url}">\n`;
+        } else {
+          succFileText += `![${attachment.name}](${attachment.url})\n`;
+        }
+      } else if (vditor.getCurrentMode() === 'wysiwyg') {
+        succFileText += `<a href="${attachment.url}">${attachment.name}</a>\n`;
+      } else {
+        succFileText += `[${attachment.name}](${attachment.url})\n`;
+      }
+    });
+    vditor.insertValue(succFileText, true);
+  }
+}
 </script>
-<style scoped></style>

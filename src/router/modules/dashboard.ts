@@ -13,16 +13,6 @@ const dashboard: AuthRoute.Route = {
       }
     },
     {
-      name: 'dashboard_workbench',
-      path: '/dashboard/workbench',
-      component: 'self',
-      meta: {
-        title: '工作台',
-        permissions: ['super', 'admin'],
-        icon: 'icon-park-outline:workbench'
-      }
-    },
-    {
       name: 'dashboard_user',
       path: '/dashboard/user',
       component: 'self',
