@@ -1,6 +1,6 @@
 import qs from 'qs';
 import FormData from 'form-data';
-import { EnumContentType } from '@/enum';
+import { EnumContentType } from '@/model/enum';
 import { isArray } from '../common';
 
 /**

@@ -1,4 +1,4 @@
-import { EnumStorageKey } from '@/enum';
+import { EnumStorageKey } from '@/model/enum';
 
 /**
  * 缓存主题颜色

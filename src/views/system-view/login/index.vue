@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { Component } from 'vue';
-import { EnumLoginModule } from '@/enum';
+import { EnumLoginModule } from '@/model/enum';
 import { useThemeStore } from '@/store';
 import { useAppInfo } from '@/composables';
 import { getColorPalette, mixColor } from '@/utils';

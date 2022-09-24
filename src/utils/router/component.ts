@@ -1,5 +1,5 @@
 import type { Component } from 'vue';
-import { EnumLayoutComponentName } from '@/enum';
+import { EnumLayoutComponentName } from '@/model/enum';
 import { BasicLayout, BlankLayout } from '@/layouts';
 import { views } from '@/views';
 

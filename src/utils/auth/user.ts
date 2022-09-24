@@ -1,4 +1,4 @@
-import { EnumStorageKey } from '@/enum';
+import { EnumStorageKey } from '@/model/enum';
 import { setSession, getSession, removeSession } from '../storage';
 
 /** 设置token */

@@ -1,4 +1,4 @@
-import { EnumStorageKey } from '@/enum';
+import { EnumStorageKey } from '@/model/enum';
 import { setLocal, getLocal } from '../storage';
 
 /** 缓存多页签数据 */

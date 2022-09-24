@@ -1,22 +1,22 @@
 /** 枚举的key类型 */
 declare namespace EnumType {
   /** 布局组件名称 */
-  type LayoutComponentName = keyof typeof import('@/enum').EnumLayoutComponentName;
+  type LayoutComponentName = keyof typeof import('@/model/enum').EnumLayoutComponentName;
 
   /** 布局模式 */
-  type ThemeLayoutMode = keyof typeof import('@/enum').EnumThemeLayoutMode;
+  type ThemeLayoutMode = keyof typeof import('@/model/enum').EnumThemeLayoutMode;
 
   /** 多页签风格 */
-  type ThemeTabMode = keyof typeof import('@/enum').EnumThemeTabMode;
+  type ThemeTabMode = keyof typeof import('@/model/enum').EnumThemeTabMode;
 
   /** 水平模式的菜单位置 */
-  type ThemeHorizontalMenuPosition = keyof typeof import('@/enum').EnumThemeHorizontalMenuPosition;
+  type ThemeHorizontalMenuPosition = keyof typeof import('@/model/enum').EnumThemeHorizontalMenuPosition;
 
   /** 过渡动画 */
-  type ThemeAnimateMode = keyof typeof import('@/enum').EnumThemeAnimateMode;
+  type ThemeAnimateMode = keyof typeof import('@/model/enum').EnumThemeAnimateMode;
 
   /** 登录模块 */
-  type LoginModuleKey = keyof typeof import('@/enum').EnumLoginModule;
+  type LoginModuleKey = keyof typeof import('@/model/enum').EnumLoginModule;
 }
 
 /** 请求的相关类型 */
@@ -136,7 +136,7 @@ declare namespace Theme {
   }
   interface LayoutModeList {
     value: EnumType.ThemeLayoutMode;
-    label: import('@/enum').EnumThemeLayoutMode;
+    label: import('@/model/enum').EnumThemeLayoutMode;
   }
 
   /** 其他主题颜色 */
@@ -182,7 +182,7 @@ declare namespace Theme {
   interface ThemeTabModeList {
     value: EnumType.ThemeTabMode;
     EnumThemeTabMode;
-    label: import('@/enum').EnumThemeTabMode;
+    label: import('@/model/enum').EnumThemeTabMode;
   }
 
   /** 侧边栏样式 */
@@ -211,7 +211,7 @@ declare namespace Theme {
   /** 水平模式的菜单的位置列表 */
   interface HorizontalMenuPositionList {
     value: EnumType.ThemeHorizontalMenuPosition;
-    label: import('@/enum').EnumThemeHorizontalMenuPosition;
+    label: import('@/model/enum').EnumThemeHorizontalMenuPosition;
   }
 
   /** 底部样式 */
@@ -234,7 +234,7 @@ declare namespace Theme {
   /** 动画类型列表 */
   interface AnimateModeList {
     value: EnumType.ThemeAnimateMode;
-    label: import('@/enum').EnumThemeAnimateMode;
+    label: import('@/model/enum').EnumThemeAnimateMode;
   }
 }
 

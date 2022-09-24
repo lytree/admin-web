@@ -1,4 +1,4 @@
-import { EnumThemeHorizontalMenuPosition, EnumThemeAnimateMode } from '@/enum';
+import { EnumThemeHorizontalMenuPosition, EnumThemeAnimateMode } from '@/model/enum';
 import jsonSetting from './theme.json';
 
 const themeColorList = [
