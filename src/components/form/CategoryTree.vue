@@ -90,7 +90,7 @@ function saveCategories() {
   saveRef.value?.validate(errors => {
     if (!errors) {
       save(saveCategory.value).then(req => {
-        if (req.data) {
+        if (!req.error) {
           options.value[0].children = req.data;
         }
       });

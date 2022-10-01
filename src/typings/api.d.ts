@@ -6,7 +6,7 @@ declare namespace ApiAuth {
 	interface UserInfo {
 		id: string;
 		username: string;
-		nickname: string;
+		nickname?: string;
 		userPhone?: string;
 		userEmail?: string;
 		userProfiles?: string;

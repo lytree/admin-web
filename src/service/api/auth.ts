@@ -38,11 +38,14 @@ export function fetchUserRoutes() {
 	return mockRequest.post<ApiRoute.Route>('/getUserRoutes');
 }
 
-/**
- * 获取用户路由数据
- * @param userId - 用户id
- * @description 后端根据用户id查询到对应的角色类型，并将路由筛选出对应角色的路由数据返回前端
- */
+
 export function updateUser(user: ApiAuth.UserInfo) {
 	return request.post<void>('/admin/user/update/userinfo', user);
+}
+export function updatePassword(user: {
+	oldPassword: string;
+	newPassword: string;
+	nextNewPassword: string;
+}) {
+	return request.post<void>('/admin/user/update/password', user);
 }

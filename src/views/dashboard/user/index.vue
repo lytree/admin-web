@@ -77,7 +77,7 @@
               </n-form-item>
             </n-form>
             <div style="display: flex; justify-content: flex-start">
-              <n-button round type="primary"> 保存 </n-button>
+              <n-button round type="primary" @click="updatePasswords"> 更新密码 </n-button>
             </div>
           </n-tab-pane>
         </n-tabs>
@@ -88,11 +88,12 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import { fetchUserInfo, updateUser } from '@/service/api/auth';
+import { fetchUserInfo, updateUser, updatePassword } from '@/service/api/auth';
 import PhLinkSimpleDuotone from '~icons/ph/link-simple-duotone';
 import IcRoundEmail from '~icons/ic/round-email';
 import IcRoundCalendarToday from '~icons/ic/round-calendar-today';
-
+import { useMessage } from 'naive-ui';
+const message = useMessage();
 const userinfo = ref<ApiAuth.UserInfo>({ id: '', username: '', token: '' });
 const userpassword = ref<{
   oldPassword: string;
@@ -106,9 +107,25 @@ const userpassword = ref<{
 
 function updateUserInfo() {
   updateUser(userinfo.value).then(req => {
-    if (req.data) {
+    if (!req.error) {
+      message.info('修改成功');
+    } else {
+      message.error(req.error.message);
     }
   });
+}
+function updatePasswords() {
+  if (userpassword.value.newPassword === userpassword.value.nextNewPassword) {
+    updatePassword(userpassword.value).then(req => {
+      if (!req.error) {
+        message.info('修改成功');
+      } else {
+        message.error(req.error.message);
+      }
+    });
+  } else {
+    message.error('两次密码新不一致');
+  }
 }
 
 onMounted(async () => {

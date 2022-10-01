@@ -92,7 +92,7 @@ function saveTags() {
   saveRef.value?.validate(errors => {
     if (!errors) {
       save(saveTag.value).then(req => {
-        if (req.data) {
+        if (!req.error) {
           if (isUpdate.value) {
             message.info('更新成功');
             isUpdate.value = false;
