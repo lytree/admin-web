@@ -169,7 +169,11 @@ function handleItemClick(attachment: AttachmentsDetail) {
   isSelect ? handleUnselect(attachment) : handleSelect(attachment);
 }
 function handleSelect(attachment: AttachmentsDetail) {
-  selected.value = [...selected.value, attachment];
+  if (props.multiSelect) {
+    selected.value = [...selected.value, attachment];
+  } else {
+    selected.value = [attachment];
+  }
 }
 
 function handleUnselect(attachment: AttachmentsDetail) {
@@ -201,6 +205,7 @@ function dealSelected() {
   const onSaveAfter = props.onSaveAfter;
   if (onSaveAfter) {
     onSaveAfter.call(onSaveAfter, selected.value);
+    emit('update:visible', false);
   }
 }
 function updateAttachmentsList(page: null | number, pageSize: number | null) {
@@ -262,17 +267,6 @@ function init() {
 function setEmpty() {
   selected.value = [];
   current.value = null;
+  emit('update:visible', false);
 }
-// onMounted(async () => {
-//   const { data } = await listAttachmentsApi({ page: 0, size: 12 });
-//   if (data) {
-//     attachmentsList.value = data.content;
-//     paginationReactive.value.page = data.page + 1;
-//     paginationReactive.value.pageCount = data.pages;
-//     paginationReactive.value.itemCount = data.total;
-//     paginationReactive.value.pageSize = data.rpp;
-//     getListMediaTypes();
-//     getListTypes();
-//   }
-// });
 </script>

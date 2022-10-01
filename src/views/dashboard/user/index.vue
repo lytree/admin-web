@@ -37,18 +37,18 @@
         <n-tabs type="line" animated>
           <n-tab-pane name="userinfo" tab="基本资料"
             ><n-form class="w-[512px]">
-              <n-form-item label="用户名：" path="inputValue">
-                <n-input v-model:value="userinfo.username" placeholder="Input" /> </n-form-item
-              ><n-form-item label="昵称：" path="inputValue">
-                <n-input v-model:value="userinfo.username" placeholder="Input" /> </n-form-item
-              ><n-form-item label="电子邮箱：" path="inputValue">
+              <n-form-item label="用户名：" path="username">
+                <n-input v-model:value="userinfo.username" disabled /> </n-form-item
+              ><n-form-item label="昵称：" path="nickname">
+                <n-input v-model:value="userinfo.nickname" placeholder="Input" /> </n-form-item
+              ><n-form-item label="电子邮箱：" path="userEmail">
                 <n-input v-model:value="userinfo.userEmail" placeholder="Input" /> </n-form-item
-              ><n-form-item label="个人说明：" path="inputValue">
-                <n-input v-model:value="userinfo.username" type="textarea" placeholder="Input" />
+              ><n-form-item label="个人说明：" path="userProfiles">
+                <n-input v-model:value="userinfo.userProfiles" type="textarea" placeholder="Input" />
               </n-form-item>
             </n-form>
             <div style="display: flex; justify-content: flex-start">
-              <n-button round type="primary"> 保存 </n-button>
+              <n-button round type="primary" @click="updateUserInfo"> 保存 </n-button>
             </div>
           </n-tab-pane>
           <n-tab-pane name="password" tab="密码"
@@ -88,7 +88,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import { fetchUserInfo } from '@/service/api/auth';
+import { fetchUserInfo, updateUser } from '@/service/api/auth';
 import PhLinkSimpleDuotone from '~icons/ph/link-simple-duotone';
 import IcRoundEmail from '~icons/ic/round-email';
 import IcRoundCalendarToday from '~icons/ic/round-calendar-today';
@@ -103,6 +103,14 @@ const userpassword = ref<{
   newPassword: '',
   nextNewPassword: ''
 });
+
+function updateUserInfo() {
+  updateUser(userinfo.value).then(req => {
+    if (req.data) {
+    }
+  });
+}
+
 onMounted(async () => {
   const { data } = await fetchUserInfo();
   if (data) {

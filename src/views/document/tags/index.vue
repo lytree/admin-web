@@ -24,8 +24,13 @@
             <n-form-item label="封面图">
               <n-input v-model:value="saveTag.thumbnail"></n-input>
             </n-form-item>
-            <div style="display: flex; justify-content: flex-end">
-              <n-button round type="primary" @click="saveTags"> 保存标签 </n-button>
+
+            <div v-if="!isUpdate" style="display: flex; justify-content: flex-end">
+              <n-button round type="primary" @click="saveTags"> 保存 </n-button>
+            </div>
+            <div v-else style="display: flex; justify-content: flex-end; gap: 5px">
+              <n-button round type="primary" @click="saveTags"> 更新 </n-button
+              ><n-button round @click="exitUpdate"> 退出更新 </n-button>
             </div>
           </n-form>
         </n-card>
@@ -44,40 +49,14 @@
               }"
               round
               closable
-              @click="updateTagModal(tag)"
+              @click="updateTag(tag)"
               @close.stop="deleteTag(tag.id)"
               >{{ tag.slugName }}</n-tag
             >
           </n-space>
         </n-card>
       </div>
-      <n-modal v-model:show="showModal" class="w-600px" preset="card" title="更新目录">
-        <n-form ref="updateRef" :model="updateTag">
-          <n-form-item label="名称">
-            <n-input v-model:value="updateTag.slug"></n-input>
-          </n-form-item>
-          <n-form-item label="别名">
-            <n-input v-model:value="updateTag.slugName"></n-input>
-          </n-form-item>
-          <n-form-item label="颜色">
-            <n-input-group>
-              <n-input v-model:value="updateTag.color" clearable readonly :style="{ width: '94%' }" />
-              <n-color-picker
-                v-model:value="updateTag.color"
-                :modes="['hex']"
-                :style="{ width: '6%' }"
-              ></n-color-picker>
-            </n-input-group>
-          </n-form-item>
-          <n-form-item label="封面图">
-            <n-input v-model:value="updateTag.thumbnail"></n-input>
-          </n-form-item>
-          <div style="display: flex; justify-content: flex-end">
-            <n-button round type="primary" @click="updateTags"> 更新分类 </n-button>
-          </div>
-        </n-form>
-      </n-modal></n-dialog-provider
-    >
+    </n-dialog-provider>
   </div>
 </template>
 
@@ -90,19 +69,11 @@ import { Tag, save, deleteTag as deleteApi, list } from '@/service/api/tag';
 const theme = useThemeStore();
 
 const saveRef = ref<FormInst | null>(null);
-const updateRef = ref<FormInst | null>(null);
 const message = useMessage();
 const dialog = useDialog();
-const showModal = ref<boolean>(false);
+const isUpdate = ref<boolean>(false);
 const tagList = ref<Tag[]>([]);
 const saveTag = ref<Tag>({
-  id: '',
-  slugName: '',
-  slug: '',
-  thumbnail: '',
-  color: ''
-});
-const updateTag = ref<Tag>({
   id: '',
   slugName: '',
   slug: '',
@@ -122,8 +93,20 @@ function saveTags() {
     if (!errors) {
       save(saveTag.value).then(req => {
         if (req.data) {
-          message.info('保存成功');
+          if (isUpdate.value) {
+            message.info('更新成功');
+            isUpdate.value = false;
+          } else {
+            message.info('保存成功');
+          }
           tagList.value = req.data;
+          saveTag.value = {
+            id: '',
+            slugName: '',
+            slug: '',
+            thumbnail: '',
+            color: ''
+          };
         }
       });
     } else {
@@ -131,24 +114,25 @@ function saveTags() {
     }
   });
 }
-function updateTagModal(tag: Tag) {
-  showModal.value = true;
-  updateTag.value = { ...tag };
+function updateTag(tag: Tag) {
+  isUpdate.value = true;
+  saveTag.value = {
+    id: tag.id,
+    slugName: tag.slugName,
+    slug: tag.slug,
+    thumbnail: tag.thumbnail,
+    color: tag.color
+  };
 }
-function updateTags() {
-  updateRef.value?.validate(errors => {
-    if (!errors) {
-      save(updateTag.value).then(req => {
-        if (req.data) {
-          message.info('修改成功');
-          showModal.value = false;
-          tagList.value = req.data;
-        }
-      });
-    } else {
-      message.error('验证失败');
-    }
-  });
+function exitUpdate() {
+  isUpdate.value = false;
+  saveTag.value = {
+    id: '',
+    slugName: '',
+    slug: '',
+    thumbnail: '',
+    color: ''
+  };
 }
 function deleteTag(id: string) {
   dialog.warning({

@@ -1,38 +1,51 @@
 <template>
   <div class="h-full grid grid-cols-6 gap-4">
+    <div class="col-span-2">
+      <n-card class="min-h-560px" title="添加分类">
+        <n-form ref="saveRef" :model="saveCategory">
+          <n-form-item label="名称">
+            <n-input v-model:value="saveCategory.slugName"></n-input>
+          </n-form-item>
+          <n-form-item label="别名">
+            <n-input v-model:value="saveCategory.slug"></n-input>
+          </n-form-item>
+          <n-form-item label="上级分类">
+            <n-tree-select
+              v-model:value="saveCategory.parentId"
+              children-field="children"
+              key-field="id"
+              label-field="slugName"
+              clearable
+              placeholder="选择空为根节点"
+              :options="options"
+            />
+          </n-form-item>
+          <n-form-item label="封面">
+            <n-input v-model:value="saveCategory.thumbnail" readonly placeholder="点击选择图片">
+              <template #suffix>
+                <n-button bordered @click="attachmentVisible = true">
+                  <template #icon>
+                    <ClarityPictureLine></ClarityPictureLine>
+                  </template>
+                </n-button>
+              </template>
+            </n-input>
+          </n-form-item>
+          <n-form-item label="优先级">
+            <n-input-number v-model:value="saveCategory.priority" class="w-full" />
+          </n-form-item>
+
+          <div v-if="!isUpdate" style="display: flex; justify-content: flex-end">
+            <n-button round type="primary" @click="saveCategories"> 保存 </n-button>
+          </div>
+          <div v-else style="display: flex; justify-content: flex-end; gap: 5px">
+            <n-button round type="primary" @click="saveCategories"> 更新 </n-button
+            ><n-button round @click="exitUpdate"> 退出更新 </n-button>
+          </div>
+        </n-form>
+      </n-card>
+    </div>
     <n-dialog-provider>
-      <div class="col-span-2">
-        <n-card class="min-h-560px" title="添加分类">
-          <n-form ref="saveRef" :model="saveCategory">
-            <n-form-item label="名称">
-              <n-input v-model:value="saveCategory.slugName"></n-input>
-            </n-form-item>
-            <n-form-item label="别名">
-              <n-input v-model:value="saveCategory.slug"></n-input>
-            </n-form-item>
-            <n-form-item label="上级分类">
-              <n-tree-select
-                v-model:value="saveCategory.parentId"
-                children-field="children"
-                key-field="id"
-                label-field="slugName"
-                clearable
-                placeholder="选择空为根节点"
-                :options="options"
-              />
-            </n-form-item>
-            <n-form-item label="封面">
-              <icon-select v-model:value="saveCategory.thumbnail" />
-            </n-form-item>
-            <n-form-item label="优先级">
-              <n-input-number v-model:value="saveCategory.priority" class="w-full" />
-            </n-form-item>
-            <div style="display: flex; justify-content: flex-end">
-              <n-button round type="primary" @click="saveCategories"> 保存 </n-button>
-            </div>
-          </n-form>
-        </n-card>
-      </div>
       <div class="col-span-4">
         <n-card class="min-h-560px" title="分类列表">
           <n-tree
@@ -49,37 +62,12 @@
             @drop="handleDrop"
         /></n-card>
       </div>
-      <n-modal v-model:show="showModal" class="w-600px" preset="card" title="更新目录">
-        <n-form ref="updateRef" :model="updateCategory">
-          <n-form-item label="名称">
-            <n-input v-model:value="updateCategory.slugName"></n-input>
-          </n-form-item>
-          <n-form-item label="别名">
-            <n-input v-model:value="updateCategory.slug"></n-input>
-          </n-form-item>
-          <n-form-item label="上级分类">
-            <n-tree-select
-              v-model:value="updateCategory.parentId"
-              children-field="children"
-              key-field="id"
-              label-field="slugName"
-              clearable
-              placeholder="选择节点"
-              :options="options"
-            />
-          </n-form-item>
-          <n-form-item label="封面">
-            <icon-select v-model:value="updateCategory.thumbnail" />
-          </n-form-item>
-          <n-form-item label="优先级">
-            <n-input-number v-model:value="updateCategory.priority" class="w-full" />
-          </n-form-item>
-          <div style="display: flex; justify-content: flex-end">
-            <n-button round type="primary" @click="updateCategoryies"> 更新分类 </n-button>
-          </div>
-        </n-form>
-      </n-modal></n-dialog-provider
-    >
+    </n-dialog-provider>
+    <attachment-select-modal
+      v-model:visible="attachmentVisible"
+      @save-after="insertImg"
+      :multi-select="false"
+    ></attachment-select-modal>
   </div>
 </template>
 
@@ -99,10 +87,12 @@ import {
 } from 'naive-ui';
 import { type Category, save, treeView, deleteCategory as deleteApi } from '@/service/api/category';
 import AntDesignBarsOutlined from '~icons/ant-design/bars-outlined';
-
+import ClarityPictureLine from '~icons/clarity/picture-line';
+import { AttachmentsDetail } from '@/service/api/attachments';
+const attachmentVisible = ref<boolean>(false);
 const dialog = useDialog();
 const saveRef = ref<FormInst | null>(null);
-const updateRef = ref<FormInst | null>(null);
+const isUpdate = ref<Boolean>(false);
 const message = useMessage();
 const options = ref<Category[]>([
   { id: '0', slugName: '根节点', slug: '', parentId: '', thumbnail: '', priority: 0, description: '', children: [] }
@@ -116,16 +106,6 @@ const saveCategory = ref<Category>({
   thumbnail: '',
   description: ''
 });
-const updateCategory = ref<Category>({
-  id: '',
-  slugName: '',
-  slug: '',
-  parentId: '',
-  priority: 0,
-  thumbnail: '',
-  description: ''
-});
-const showModal = ref<boolean>(false);
 
 onMounted(async () => {
   const { data } = await treeView();
@@ -141,6 +121,12 @@ function saveCategories() {
     if (!errors) {
       save(saveCategory.value).then(req => {
         if (req.data) {
+          if (isUpdate.value) {
+            message.info('更新成功');
+            isUpdate.value = false;
+          } else {
+            message.info('保存成功');
+          }
           options.value[0].children = req.data;
           saveCategory.value = {
             id: '',
@@ -158,20 +144,17 @@ function saveCategories() {
     }
   });
 }
-function updateCategoryies() {
-  updateRef.value?.validate(errors => {
-    if (!errors) {
-      save(updateCategory.value).then(req => {
-        if (req.data) {
-          message.info('修改成功');
-          showModal.value = false;
-          options.value[0].children = req.data;
-        }
-      });
-    } else {
-      message.error('验证失败');
-    }
-  });
+function exitUpdate() {
+  isUpdate.value = false;
+  saveCategory.value = {
+    id: '',
+    slugName: '',
+    slug: '',
+    parentId: '',
+    priority: 0,
+    thumbnail: '',
+    description: ''
+  };
 }
 function deleteMenu(id: string) {
   dialog.warning({
@@ -208,15 +191,26 @@ function renderLabel({ option }: { option: TreeOption }) {
             }
           ),
         suffix: () =>
-          h(NSpace, { class: 'w-72px' }, () => [
+          h(NSpace, { class: 'w-114px' }, () => [
             h(
               NButton,
               {
                 text: true,
                 type: 'primary',
                 onClick: () => {
-                  showModal.value = true;
-                  updateCategory.value = {
+                  saveCategory.value.parentId = option.parentId as string;
+                }
+              },
+              { default: () => `新增` }
+            ),
+            h(
+              NButton,
+              {
+                text: true,
+                type: 'primary',
+                onClick: () => {
+                  isUpdate.value = true;
+                  saveCategory.value = {
                     id: option.id as string,
                     slugName: option.slugName as string,
                     slug: option.slug as string,
@@ -239,7 +233,9 @@ function renderLabel({ option }: { option: TreeOption }) {
     )
   );
 }
-
+function insertImg(selected: AttachmentsDetail[]) {
+  saveCategory.value.thumbnail = selected[0].thumbnail;
+}
 function findSiblingsAndIndex(node: TreeOption, nodes?: TreeOption[]): [TreeOption[], number] | [null, null] {
   if (!nodes) return [null, null];
 
@@ -275,4 +271,8 @@ function handleDrop({ node, dragNode, dropPosition }: TreeDropInfo) {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+:deep(.n-input-wrapper) {
+  padding-right: 0;
+}
+</style>
