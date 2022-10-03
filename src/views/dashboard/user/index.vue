@@ -5,7 +5,7 @@
         ><div class="mb-6 text-center">
           <n-tooltip placement="right" trigger="hover">
             <template #trigger>
-              <n-avatar round :size="104" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />
+              <n-avatar round :size="104" :src="userinfo.userAvatar" />
             </template>
             点击可修改头像
           </n-tooltip>
@@ -13,9 +13,9 @@
           <div></div>
         </div>
         <div>
-          <p class="mb-3"><ph-link-simple-duotone></ph-link-simple-duotone></p>
-          <p class="mb-3"><ic-round-email></ic-round-email></p>
-          <p class="mb-3"><ic-round-calendar-today></ic-round-calendar-today></p>
+          <p class="mb-3"><ph-link-simple-duotone class="mr-3 anticon anticon-link" /> {{ userinfo.userUrl }}</p>
+          <p class="mb-3"><ic-round-email class="mr-3 anticon anticon-link" /> {{ userinfo.userEmail }}</p>
+          <p class="mb-3"><ic-round-calendar-today class="mr-3 anticon anticon-link" /> {{ userinfo.userEmail }}</p>
         </div>
         <n-divider />
         <n-list>

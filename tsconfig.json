@@ -27,7 +27,7 @@
 		"types": [
 			"vite/client",
 			"node",
-			"unplugin-icons/types/vue",
+			"unplugin-icons/types/vue3",
 			"naive-ui/volar"
 		]
 	},

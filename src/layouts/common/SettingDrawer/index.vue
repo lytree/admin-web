@@ -3,7 +3,7 @@
     <n-drawer-content title="主题配置" :native-scrollbar="false">
       <dark-mode />
       <theme-color-select />
-      <page-func />
+      <!-- <page-func /> -->
       <page-view />
       <theme-config />
     </n-drawer-content>
@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { useAppStore } from '@/store';
-import { DrawerButton, DarkMode, ThemeColorSelect, PageFunc, PageView, ThemeConfig } from './components';
+import { DrawerButton, DarkMode, ThemeColorSelect,  PageView, ThemeConfig } from './components';
 
 const app = useAppStore();
 </script>

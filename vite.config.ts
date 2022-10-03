@@ -3,7 +3,7 @@ import { defineConfig, loadEnv } from 'vite';
 import { viteDefine, setupVitePlugins, createViteProxy } from './build';
 import { getEnvConfig } from './.env-config';
 
-export default defineConfig(configEnv => {
+export default defineConfig((configEnv: { mode: any; }) => {
   const viteEnv = loadEnv(configEnv.mode, process.cwd()) as ImportMetaEnv;
 
   const rootPath = fileURLToPath(new URL('./', import.meta.url));
@@ -43,7 +43,8 @@ export default defineConfig(configEnv => {
       sourcemap: false,
       commonjsOptions: {
         ignoreTryCatch: false
-      }
+      },
+      outDir: '../src/main/resources/admin'
     }
   };
 });

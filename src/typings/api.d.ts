@@ -10,6 +10,8 @@ declare namespace ApiAuth {
 		userPhone?: string;
 		userEmail?: string;
 		userProfiles?: string;
+		userUrl?: string
+		userAvatar?: string
 		isRememberLogin?: boolean;
 		token: string;
 	}

@@ -12,8 +12,8 @@ const serviceEnvConfig: ServiceEnv = {
     proxy: '/api'
   },
   prod: {
-    url: 'http://127.0.0.1:9000',
-    proxy: '/api'
+    url: '/admin',
+    proxy: './'
   }
 };
 

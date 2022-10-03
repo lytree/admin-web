@@ -51,11 +51,12 @@
           </n-form-item>
           <n-form-item label="发表时间：" class="w-50%">
             <n-date-picker
-              v-model:value="post.publicTime"
+              v-model:formatted-value="post.publicTime"
               placement="bottom-start"
               format="yyyy-MM-dd HH:mm:ss"
               placeholder="选择文章发表时间"
               type="datetime"
+              :default-value="new Date().getMilliseconds"
               clearable
               class="w-full"
             />

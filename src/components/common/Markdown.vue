@@ -51,7 +51,7 @@ export default defineComponent({
       if (!wrapEl) return;
       const bindValue = { ...attrs, ...props };
       const insEditor = new Vditor(wrapEl, {
-        _lutePath: '/src/js/lute.min.js',
+        _lutePath: '/src/assets/js/lute.min.js',
         theme: props.darkMode === true ? 'dark' : 'classic',
         lang: 'zh_CN',
         mode: 'sv',

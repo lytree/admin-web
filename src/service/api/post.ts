@@ -58,7 +58,7 @@ export interface PostDetail {
   title: string;
   status: PostStatus;
   slug: string;
-  publicTime: number;
+  publicTime: string;
   metaKeywords: string;
   metaDescription: string;
   thumbnail: string;

@@ -24,7 +24,7 @@ const resetPost = (): PostDetail => {
     title: '',
     status: PostStatus.DRAFT,
     slug: '',
-    publicTime: 0,
+    publicTime: "",
     metaKeywords: '',
     metaDescription: '',
     thumbnail: '',
