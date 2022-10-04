@@ -29,7 +29,7 @@ export default defineComponent({
         if (!inited) {
           return;
         }
-        vditorRef.value?.setTheme(val === true ? 'dark' : 'classic');
+        vditorRef.value?.setTheme(val === true ? 'dark' : 'classic', undefined,val === true ? 'solarized-dark' : 'solarized-light');
       },
       {
         immediate: true,
@@ -51,7 +51,6 @@ export default defineComponent({
       if (!wrapEl) return;
       const bindValue = { ...attrs, ...props };
       const insEditor = new Vditor(wrapEl, {
-        _lutePath: '/src/assets/js/lute.min.js',
         theme: props.darkMode === true ? 'dark' : 'classic',
         lang: 'zh_CN',
         mode: 'sv',
@@ -101,6 +100,10 @@ export default defineComponent({
           math: {
             engine: 'KaTeX'
           },
+          hljs: {
+            enable: true,
+            style: props.darkMode === true ? 'solarized-dark' : 'solarized-light',
+          },
           actions: []
         },
         minHeight: props.height,
@@ -136,7 +139,7 @@ export default defineComponent({
       try {
         vditorInstance?.destroy?.();
         // eslint-disable-next-line no-empty
-      } catch (error) {}
+      } catch (error) { }
       vditorRef.value = null;
       initedRef.value = false;
     }

@@ -5,28 +5,28 @@ import { request } from '../request';
  * @returns list
  */
 export function list() {
-  return request.get<Category[]>(`/admin/category`);
+  return request.get<Category[]>(`/api/admin/category`);
 }
 /**
  *
  * @returns list
  */
 export function save(category: Category) {
-  return request.post<Category[]>(`/admin/category/save`, category);
+  return request.post<Category[]>(`/api/admin/category/save`, category);
 }
 /**
  *
  * @returns list
  */
 export function treeView() {
-  return request.get<Category[]>(`/admin/category/tree_view`);
+  return request.get<Category[]>(`/api/admin/category/tree_view`);
 }
 /**
  *
  * @returns list
  */
 export function deleteCategory(id: string) {
-  return request.delete<Category[]>(`/admin/category/${id}`);
+  return request.delete<Category[]>(`/api/admin/category/${id}`);
 }
 /** 后端返回的路由相关类型 */
 

@@ -23,7 +23,7 @@ export function listPostApi({
   more?: boolean;
 }) {
   return request.get<PageInfo.Page<PostDetail>>(
-    `/admin/posts?${qs.stringify(
+    `/api/admin/posts?${qs.stringify(
       {
         page,
         size,
@@ -36,19 +36,19 @@ export function listPostApi({
   );
 }
 export function savePostApi(postDetail: PostDetail) {
-  return request.post<PostDetail>(`/admin/posts/save`, postDetail);
+  return request.post<PostDetail>(`/api/admin/posts/save`, postDetail);
 }
 export function getOneApi(id: string) {
-  return request.get<PostDetail>(`/admin/posts/${id}`);
+  return request.get<PostDetail>(`/api/admin/posts/${id}`);
 }
 export function updatePostStatusApi(id: string, status: string) {
-  return request.put<PostDetail>(`/admin/posts/${id}/status/${status}`);
+  return request.put<PostDetail>(`/api/admin/posts/${id}/status/${status}`);
 }
 export function updatePostStatusBatchApi(ids: number[], status: string) {
-  return request.put<PostDetail>(`/admin/posts/status/${status}`, ids);
+  return request.put<PostDetail>(`/api/admin/posts/status/${status}`, ids);
 }
 export function deletePostByIds(ids: string[]) {
-  return request.delete<void>(`/admin/posts`, ids);
+  return request.delete<void>(`/api/admin/posts`, ids);
 }
 export function deletePostById(id: string) {
   return request.delete(`/admin/posts/${id}`);

@@ -11,17 +11,17 @@ export function listAttachmentsApi({
 	attachmentType?: string;
 }) {
 	return request.get<PageInfo.Page<AttachmentsDetail>>(
-		`/admin/resource?${qs.stringify({
+		`/api/admin/resource?${qs.stringify({
 			page,
 			size
 		})}`
 	);
 }
 export function listMediaTypes() {
-	return request.get<string[]>(`/admin/resource/media_types`);
+	return request.get<string[]>(`/api/admin/resource/media_types`);
 }
 export function listTypes() {
-	return request.get<string[]>(`/admin/resource/types`);
+	return request.get<string[]>(`/api/admin/resource/types`);
 }
 export interface AttachmentsDetail {
 	id?: string;

@@ -12,8 +12,8 @@ const serviceEnvConfig: ServiceEnv = {
     proxy: '/api'
   },
   prod: {
-    url: '/admin',
-    proxy: './'
+    url: '/',
+    proxy: '/'
   }
 };
 
